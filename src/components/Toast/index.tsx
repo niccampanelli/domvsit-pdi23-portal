@@ -1,4 +1,4 @@
-import { IToastProps } from "../../types/components/Toast";
+import { IToastProps } from "../../types/components/Toast"
 
 export default function Toast({
     title,

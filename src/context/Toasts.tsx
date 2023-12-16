@@ -1,7 +1,7 @@
-import { createContext, useContext, useState } from "react";
-import { IToastsContext, IToastsProviderProps } from "../types/context/Toasts";
-import { IToastProps } from "../types/components/Toast";
-import Toast from "../components/Toast";
+import { createContext, useContext, useState } from "react"
+import { IToastsContext, IToastsProviderProps } from "../types/context/Toasts"
+import { IToastProps } from "../types/components/Toast"
+import Toast from "../components/Toast"
 
 const ToastsContext = createContext<IToastsContext>({
     addToast: () => { }

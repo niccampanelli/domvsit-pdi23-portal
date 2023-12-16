@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from "axios";
+import axios, { AxiosInstance } from "axios"
 
 export default class API {
 
@@ -15,7 +15,7 @@ export default class API {
     private static createInstance(baseURL: string): AxiosInstance {
         return axios.create({
             baseURL: baseURL,
-        });
+        })
     }
 
 }

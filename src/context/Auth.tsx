@@ -1,9 +1,9 @@
-import { createContext, useContext } from "react";
-import { IAuthContext, IAuthProviderProps } from "../types/context/Auth";
-import { IAuthenticateRequest } from "../types/services/authService";
-import authService from "../services/authService";
-import { useToastsContext } from "./Toasts";
-import { getErrorMessageOrDefault } from "../util/getErrorMessageOrDefault";
+import { createContext, useContext } from "react"
+import { IAuthContext, IAuthProviderProps } from "../types/context/Auth"
+import { IAuthenticateRequest } from "../types/services/authService"
+import authService from "../services/authService"
+import { useToastsContext } from "./Toasts"
+import { getErrorMessageOrDefault } from "../util/getErrorMessageOrDefault"
 
 const AuthContext = createContext<IAuthContext>({
     login: async () => { }

@@ -1,5 +1,7 @@
 import { useState } from "react"
 import { useAuthContext } from "../../context/Auth"
+import Button from "../../components/Button"
+import Input from "../../components/Input"
 
 export default function Auth() {
 
@@ -11,9 +13,21 @@ export default function Auth() {
     return (
         <div>
             <h1>Auth</h1>
-            <input type="text" placeholder="Email" onChange={e => setEmail(e.target.value)} value={email} />
-            <input type="password" placeholder="Password" onChange={e => setPassword(e.target.value)} value={password} />
-            <button onClick={() => login({ login: email, password })}>Login</button>
+            <Input
+                placeholder="Email"
+                onChange={event => setEmail(event.target.value)}
+                value={email}
+            />
+            <Input
+                placeholder="Password"
+                onChange={event => setPassword(event.target.value)}
+                value={password}
+            />
+            <Button
+                onClick={() => login({ login: email, password })}
+            >
+                Login
+            </Button>
         </div>
     )
 }

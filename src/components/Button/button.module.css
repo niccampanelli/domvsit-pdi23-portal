@@ -1,0 +1,12 @@
+.root {
+    cursor: pointer;
+    background-color: var(--primary-color-500);
+    color: var(--text-contrast-color-100);
+    font-weight: 800;
+    padding: var(--padding-small);
+    border-radius: var(--border-radius-small);
+}
+
+.root:hover {
+    background-color: var(--primary-color-600);
+}

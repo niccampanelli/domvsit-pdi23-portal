@@ -6,20 +6,28 @@ export default function Input({
     placeholder,
     onChange = () => { },
     value = "",
+    error,
     ...props
 }: IInputProps) {
 
     return (
-        <div
-            className={styles.root}
-        >
-            <input
-                className={classes(styles.input, props.className)}
-                placeholder={placeholder}
-                onChange={onChange}
-                value={value}
-                {...props}
-            />
+        <div>
+            <div
+                className={styles.root}
+            >
+                <input
+                    className={classes(styles.input, props.className)}
+                    placeholder={placeholder}
+                    onChange={onChange}
+                    value={value}
+                    {...props}
+                />
+            </div>
+            <span
+                className={styles.errorMessage}
+            >
+                {error}
+            </span>
         </div>
     )
 }

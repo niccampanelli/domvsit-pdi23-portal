@@ -1,10 +1,12 @@
 .root {
     cursor: pointer;
     background-color: var(--primary-color-500);
-    color: var(--text-contrast-color-100);
+    color: var(--text-contrast-color);
     font-weight: 800;
-    padding: var(--padding-small);
-    border-radius: var(--border-radius-small);
+    font-size: var(--text-size-md);
+    padding: var(--padding-sm) var(--padding-md);
+    border-radius: var(--border-radius-sm);
+    transition: background-color 0.1s ease-in-out;
 }
 
 .root:hover {

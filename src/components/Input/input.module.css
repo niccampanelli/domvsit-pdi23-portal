@@ -1,5 +1,34 @@
 .root {
+    display: flex;
     border: 2px solid var(--primary-color-500);
-    border-radius: var(--border-radius-small);
-    padding: var(--padding-small);
+    border-radius: var(--border-radius-sm);
+}
+
+.root:hover {
+    border-color: var(--primary-color-700);
+}
+
+.root:hover .input {
+    color: var(--primary-color-700);
+}
+
+.root:hover .input::placeholder {
+    color: var(--text-color-500);
+}
+
+.input {
+    background-color: transparent;
+    padding: var(--padding-sm) var(--padding-md);
+    color: var(--primary-color-500);
+    font-size: var(--text-size-md);
+    flex: 1;
+}
+
+.input::placeholder {
+    color: var(--text-color-300);
+}
+
+.errorMessage {
+    color: var(--tertiary-color-500);
+    font-size: var(--text-size-sm);
 }

@@ -1,7 +1,7 @@
 import { ReactNode } from "react"
 import { IToastProps } from "../components/Toast"
 
-export type ToastTypes = "success" | "error" | "warning" | "info"
+export type ToastTypes = "error" | "warning" | "info"
 
 export interface IToastsContext {
     addToast: (props: IToastProps) => void

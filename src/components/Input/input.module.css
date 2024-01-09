@@ -2,6 +2,7 @@
     display: flex;
     border: 2px solid var(--primary-color-500);
     border-radius: var(--border-radius-sm);
+    position: relative;
 }
 
 .root:hover {
@@ -26,6 +27,28 @@
 
 .input::placeholder {
     color: var(--text-color-300);
+}
+
+.button {
+    display: flex;
+    position: absolute;
+    background-color: var(--background-color-1000);
+    top: 0;
+    right: 0;
+    bottom: 0;
+    align-items: center;
+    justify-content: center;
+    padding: var(--padding-sm) var(--padding-md);
+    cursor: pointer;
+}
+
+.icon {
+    fill: var(--primary-color-500);
+    transition: fill 0.1s ease-in-out;
+}
+
+.button:hover .icon {
+    fill: var(--primary-color-700);
 }
 
 .errorMessage {

@@ -5,14 +5,14 @@
 
 html {
     font-size: 16px;
-    --primary-color-1000: #e7e7ff;
-    --primary-color-900: #c4c4ff;
-    --primary-color-800: #a1a1ff;
-    --primary-color-700: #7e7eff;
-    --primary-color-600: #5b5bff;
-    --primary-color-500: #2a00e7;
-    --primary-color-400: #1f00b4;
-    --primary-color-300: #140081;
+    --primary-color-1000: #d8d3ff;
+    --primary-color-900: #a99eff;
+    --primary-color-800: #7a6eff;
+    --primary-color-700: #5e4cff;
+    --primary-color-600: #402bff;
+    --primary-color-500: #1600da;
+    --primary-color-400: #0f00b3;
+    --primary-color-300: #0a0080;
     --secondary-color-500: #ffb326;
     --secondary-color-400: #eb9800;
     --secondary-color-300: #b46d00;

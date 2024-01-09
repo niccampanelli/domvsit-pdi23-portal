@@ -20,10 +20,10 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
             addToast({
                 title: "Login realizado com sucesso",
                 message: `Bem vindo, ${response.name}`,
-                type: "success",
             })
         }
         catch (error) {
+            console.error(error)
             var message = getErrorMessageOrDefault(error)
 
             addToast({

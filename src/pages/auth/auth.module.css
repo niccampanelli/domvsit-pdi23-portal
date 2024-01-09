@@ -14,6 +14,10 @@
     padding: var(--padding-xxl) var(--padding-md);
 }
 
+.logoContainer {
+    text-decoration: none;
+}
+
 .logo {
     font-size: 3rem;
     font-weight: 900;

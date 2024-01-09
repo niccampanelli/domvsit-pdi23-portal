@@ -12,3 +12,8 @@
 .root:hover {
     background-color: var(--primary-color-600);
 }
+
+.link {
+    text-decoration: none;
+    text-align: center;
+}

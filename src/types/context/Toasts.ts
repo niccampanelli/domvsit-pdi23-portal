@@ -4,7 +4,7 @@ import { IToastProps } from "../components/Toast"
 export type ToastTypes = "error" | "warning" | "info"
 
 export interface IToastsContext {
-    addToast: (props: IToastProps) => void
+    addToast: (props: Omit<IToastProps, "id">) => void
 }
 
 export interface IToastsProviderProps {

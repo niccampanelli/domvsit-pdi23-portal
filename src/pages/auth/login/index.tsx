@@ -5,6 +5,8 @@ import Button from "../../../components/Button"
 import Input from "../../../components/Input"
 import { useAuthContext } from "../../../context/Auth"
 import styles from "../auth.module.css"
+import Spinner from "../../../components/Spinner"
+import { useState } from "react"
 
 const defaultValues = {
     email: '',
@@ -23,6 +25,8 @@ const schema = yup.object().shape({
 
 export default function Login() {
 
+    const [loading, setLoading] = useState(false)
+
     const {
         control,
         handleSubmit
@@ -34,8 +38,10 @@ export default function Login() {
 
     const { login } = useAuthContext()
 
-    function handleLogin(model: any) {
-        login({ login: model.email, password: model.password })
+    async function handleLogin(model: any) {
+        setLoading(true)
+        await login({ login: model.email, password: model.password })
+        setLoading(false)
     }
 
     return (
@@ -63,8 +69,16 @@ export default function Login() {
                 } />
             <Button
                 onClick={handleSubmit(handleLogin)}
+                disabled={loading}
             >
-                Login
+                {loading ?
+                    <Spinner
+                        size={1}
+                        color="white"
+                    />
+                    :
+                    "Entrar"
+                }
             </Button>
             <Button
                 link

@@ -5,6 +5,7 @@ import styles from "./button.module.css"
 
 export default function Button({
     onClick = () => { },
+    disabled = false,
     children,
     className,
     link,
@@ -17,6 +18,7 @@ export default function Button({
             <ButtonLink
                 to={to}
                 className={classes(styles.root, className)}
+                disabled={disabled}
             >
                 {children}
             </ButtonLink>
@@ -26,6 +28,7 @@ export default function Button({
             <button
                 onClick={onClick}
                 className={classes(styles.root, className)}
+                disabled={disabled}
                 {...props}
             >
                 {children}

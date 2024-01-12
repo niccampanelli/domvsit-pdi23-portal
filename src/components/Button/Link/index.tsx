@@ -5,13 +5,14 @@ import { classes } from "../../../util/classes";
 
 export default function ButtonLink({
     to = "/",
+    disabled = false,
     children,
     className
 }: IButtonProps) {
 
     return (
         <Link
-            to={to}
+            to={disabled ? "#" : to}
             className={classes(styles.root, styles.link, className)}
         >
             {children}

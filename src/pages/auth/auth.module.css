@@ -33,6 +33,10 @@
     max-width: 400px;
 }
 
+.tip {
+    margin-top: 1rem;
+}
+
 .banner {
     flex: 1;
     object-fit: cover;

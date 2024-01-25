@@ -1,16 +1,17 @@
 import { yupResolver } from "@hookform/resolvers/yup"
+import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import * as yup from 'yup'
-import Button from "../../../components/Button"
-import Input from "../../../components/Input"
-import { useAuthContext } from "../../../context/Auth"
-import styles from "../auth.module.css"
-import Spinner from "../../../components/Spinner"
-import { useState } from "react"
+import Button from "../../../../components/Button"
+import Input from "../../../../components/Input"
+import Spinner from "../../../../components/Spinner"
+import { useAuthContext } from "../../../../context/Auth"
+import styles from "../../auth.module.css"
+import Link from "../../../../components/Link"
 
 const defaultValues = {
     email: '',
-    password: ''
+    attendantToken: ''
 }
 
 const schema = yup.object().shape({
@@ -18,12 +19,12 @@ const schema = yup.object().shape({
         .string()
         .email("Insira um email válido")
         .required("Insira o seu email"),
-    password: yup
+    attendantToken: yup
         .string()
-        .required("Insira a sua senha")
+        .required("Insira o seu código de participante")
 })
 
-export default function Login() {
+export default function AttendantLogin() {
 
     const [loading, setLoading] = useState(false)
 
@@ -36,16 +37,23 @@ export default function Login() {
         resolver: yupResolver(schema)
     })
 
-    const { login } = useAuthContext()
+    const { loginAttendant } = useAuthContext()
 
-    async function handleLogin(model: any) {
+    async function handleLogin(model: typeof defaultValues) {
         setLoading(true)
-        await login({ login: model.email, password: model.password })
+        await loginAttendant({
+            email: model.email,
+            attendantToken: model.attendantToken
+        })
         setLoading(false)
     }
 
     return (
-        <div className={styles.form}>
+        <form
+            className={styles.form}
+            onSubmit={event => handleSubmit(handleLogin)(event)}
+        >
+            <h1>Entrar como participante</h1>
             <Controller
                 name="email"
                 control={control}
@@ -53,23 +61,26 @@ export default function Login() {
                     <Input
                         {...field}
                         placeholder="Email"
+                        type="email"
                         error={error?.message}
+                        autoFocus
                     />
-                } />
+                }
+            />
             <Controller
-                name="password"
+                name="attendantToken"
                 control={control}
                 render={({ field, fieldState: { error } }) =>
                     <Input
                         {...field}
-                        placeholder="Password"
-                        type="password"
+                        placeholder="Código de participante"
                         error={error?.message}
                     />
-                } />
+                }
+            />
             <Button
-                onClick={handleSubmit(handleLogin)}
                 disabled={loading}
+                type="submit"
             >
                 {loading ?
                     <Spinner
@@ -80,12 +91,21 @@ export default function Login() {
                     "Entrar"
                 }
             </Button>
+            <span
+                className={styles.tip}
+            >
+                Ainda não possui uma conta?
+            </span>
             <Button
                 link
-                to="/signup"
+                to="/attendant/join"
+                type="button"
             >
-                Cadastre-se
+                Participe de um cliente
             </Button>
-        </div>
+            <span>
+                Ou faça login como <Link to="/login">usuário</Link>.
+            </span>
+        </form>
     )
 }

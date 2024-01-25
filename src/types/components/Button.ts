@@ -1,6 +1,6 @@
-import { HTMLAttributes } from "react"
+import { ButtonHTMLAttributes } from "react"
 
-export interface IButtonProps extends HTMLAttributes<HTMLButtonElement> {
+export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     onClick?: () => void
     disabled?: boolean
     children?: React.ReactNode

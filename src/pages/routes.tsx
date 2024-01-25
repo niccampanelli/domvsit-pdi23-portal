@@ -2,15 +2,18 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom"
 import Admin from "./admin"
 import Auth from "./auth"
 import Clients from "./clients"
-import SignUp from "./auth/signup"
-import Login from "./auth/login"
+import UserSignUp from "./auth/user/signup"
+import UserLogin from "./auth/user/login"
+import Home from "./home"
+import AttendantLogin from "./auth/attendant/login"
+import AttendantJoin from "./auth/attendant/join"
 
 export default function Routes() {
 
     const router = createBrowserRouter([
         {
             path: "/",
-            element: <Admin />
+            element: <Home />
         },
         {
             path: "/",
@@ -19,13 +22,25 @@ export default function Routes() {
                 {
                     path: "/login",
                     index: true,
-                    element: <Login />
+                    element: <UserLogin />
                 },
                 {
                     path: "/signup",
-                    element: <SignUp />
-                }
+                    element: <UserSignUp />
+                },
+                {
+                    path: "attendant/login",
+                    element: <AttendantLogin />
+                },
+                {
+                    path: "attendant/join",
+                    element: <AttendantJoin />
+                },
             ]
+        },
+        {
+            path: "/admin",
+            element: <Admin />
         },
         {
             path: "/clients",

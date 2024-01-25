@@ -7,6 +7,7 @@
     padding: var(--padding-sm) var(--padding-md);
     border-radius: var(--border-radius-sm);
     transition: background-color 0.1s ease-in-out;
+    display: inline-block;
 }
 
 .root:hover {

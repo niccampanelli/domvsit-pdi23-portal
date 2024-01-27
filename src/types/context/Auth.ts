@@ -6,7 +6,9 @@ import { IUser } from "./User"
 export interface IAuthContext {
     login: (request: IAuthenticateRequest) => Promise<void>
     loginAttendant: (request: IIdentifyRequest) => Promise<void>
-    user?: IUser
+    user?: IUser,
+    userDataLoading: boolean,
+    logout: () => void
 }
 
 export interface IAuthProviderProps {

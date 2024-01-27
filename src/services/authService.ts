@@ -27,7 +27,8 @@ async function revalidateToken(): Promise<IRevalidateTokenResponse> {
 
 async function restoreUserData(): Promise<IAuthenticateResponse> {
     const { data } = await API.authApi.get<IAuthenticateResponse>("authentication/restoreUserData")
-
+    data.token = localStorage.getItem("authentication_token") || ""
+    data.refreshToken = localStorage.getItem("authentication_refresh_token") || ""
     return data
 }
 

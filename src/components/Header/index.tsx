@@ -1,14 +1,14 @@
 import { useState } from "react"
+import UserIcon from "../../assets/icons/user.svg?react"
 import { useAuthContext } from "../../context/Auth"
 import { useNavigationContext } from "../../context/Navigation"
-import Menu from "./Menu"
+import Menu from "../Menu"
 import styles from "./header.module.css"
-import UserIcon from "../../assets/icons/user.svg?react"
 
 export default function Header() {
 
     const { currentNavigationItem } = useNavigationContext()
-    const { user } = useAuthContext()
+    const { user, logout } = useAuthContext()
 
     const [menuOpen, setMenuOpen] = useState(false)
 
@@ -22,10 +22,22 @@ export default function Header() {
                     className={styles.user}
                     onClick={() => setMenuOpen(prev => !prev)}
                 >
-                    <UserIcon className={styles.userIcon} />
+                    <span className={styles.userName}>
+                        {user?.name}
+                    </span>
+                    <div className={styles.userDefaultPhoto}>
+                        <UserIcon className={styles.userIcon} />
+                    </div>
                 </div>
                 {menuOpen &&
-                    <Menu />
+                    <Menu
+                        options={[
+                            {
+                                name: "Sair",
+                                onClick: () => logout()
+                            }
+                        ]}
+                    />
                 }
             </div>
         </header>

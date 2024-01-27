@@ -25,8 +25,8 @@ export default class API {
         return axios.create({
             baseURL: baseURL,
             headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`,
-                RefreshToken: localStorage.getItem("refreshToken")
+                Authorization: `Bearer ${localStorage.getItem("authentication_token")}`,
+                RefreshToken: localStorage.getItem("authentication_refresh_token")
             }
         })
     }

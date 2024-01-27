@@ -3,16 +3,32 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: var(--padding-lg) var(--padding-xl);
+    padding: var(--padding-md) var(--padding-xl);
+    border-bottom: var(--border);
 }
 
 .user {
-    width: 35px;
-    height: 35px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 8px 10px;
+    gap: var(--gap-sm);
+    border-radius: 100px;
+    border: var(--border);
+    cursor: pointer;
+}
+
+.userName {
+    font-size: var(--text-size-md);
+    font-weight: 700;
+}
+
+.userDefaultPhoto {
+    width: 30px;
+    height: 30px;
     border: 2px solid black;
     border-radius: 100px;
-    padding: 5px;
-    cursor: pointer;
+    padding: 4px;
 }
 
 .userIcon {

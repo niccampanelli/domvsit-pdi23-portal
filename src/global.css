@@ -24,7 +24,8 @@ html {
     --text-color-300: #888888;
     --text-color-500: #e0e0e0;
     --text-contrast-color: #ffffff;
-    --border: 2px solid var(--text-color-500);
+    --border-color: #ececec;
+    --border: 2px solid var(--border-color);
     --box-shadow-sm: 0 0 0.1rem 0 rgba(0, 0, 0, 0.2);
     --box-shadow-md: 0 0 0.2rem 0 rgba(0, 0, 0, 0.2);
     --box-shadow-lg: 0 0 0.5rem 0 rgba(0, 0, 0, 0.2);
@@ -42,6 +43,8 @@ html {
     --border-radius-md: 0.5rem;
     --border-radius-lg: 1rem;
     --gap-sm: 0.5rem;
+    --gap-md: 1rem;
+    --gap-lg: 2rem;
 }
 
 * {

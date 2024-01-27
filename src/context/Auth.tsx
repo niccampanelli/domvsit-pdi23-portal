@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react"
+import API from "../services/api"
 import authService from "../services/authService"
 import clientService from "../services/clientService"
 import { IAuthContext, IAuthProviderProps } from "../types/context/Auth"
@@ -7,12 +8,13 @@ import { IAuthenticateRequest } from "../types/services/authService"
 import { IIdentifyRequest } from "../types/services/clientService"
 import { getErrorMessageOrDefault } from "../util/getErrorMessageOrDefault"
 import { useToastsContext } from "./Toasts"
-import API from "../services/api"
 
 const AuthContext = createContext<IAuthContext>({
     login: async () => { },
     loginAttendant: async () => { },
-    user: undefined
+    user: undefined,
+    userDataLoading: true,
+    logout: async () => { },
 })
 
 export default function AuthProvider({
@@ -22,6 +24,7 @@ export default function AuthProvider({
     const { addToast } = useToastsContext()
 
     const [user, setUser] = useState<IUser | undefined>()
+    const [userDataLoading, setUserDataLoading] = useState(true)
 
     async function login(request: IAuthenticateRequest): Promise<void> {
         try {
@@ -79,7 +82,35 @@ export default function AuthProvider({
         }
     }
 
+    async function logout(): Promise<void> {
+        try {
+            addToast({
+                title: "Você foi desconectado",
+                message: `Até logo, ${user?.name}`,
+            })
+
+            setUser(undefined)
+
+            localStorage.removeItem("authentication_token")
+            localStorage.removeItem("authentication_refresh_token")
+
+            API.refreshInstances()
+        }
+        catch (error) {
+            console.error(error)
+            var message = getErrorMessageOrDefault(error)
+
+            addToast({
+                title: "Erro ao fazer logout",
+                message: message,
+                type: "error",
+            })
+        }
+    }
+
     async function restoreUserData(): Promise<void> {
+        setUserDataLoading(true)
+
         try {
             const response = await authService.restoreUserData()
 
@@ -95,6 +126,9 @@ export default function AuthProvider({
                 type: "error",
             })
         }
+        finally {
+            setUserDataLoading(false)
+        }
     }
 
     useEffect(() => {
@@ -107,7 +141,9 @@ export default function AuthProvider({
         <AuthContext.Provider value={{
             login,
             loginAttendant,
-            user
+            user,
+            userDataLoading,
+            logout
         }}>
             {children}
         </AuthContext.Provider>

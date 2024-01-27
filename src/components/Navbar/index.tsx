@@ -1,8 +1,9 @@
+import { AnimatePresence, Variants, motion } from "framer-motion"
 import { NavLink } from "react-router-dom"
 import { useNavigationContext } from "../../context/Navigation"
 import Logo from "../Logo"
 import styles from "./navbar.module.css"
-import { AnimatePresence, Variants, motion } from "framer-motion"
+import { classes } from "../../util/classes"
 
 const navbarAnimationVariants: Variants = {
     initial: {
@@ -17,7 +18,6 @@ export default function Navbar() {
 
     const {
         navbarOpen,
-        toggleNavbar,
         navigationItems
     } = useNavigationContext()
 
@@ -39,7 +39,20 @@ export default function Navbar() {
                         <ul className={styles.list}>
                             {navigationItems.map(item => (
                                 <li key={item.name}>
-                                    <NavLink to={item.path}>
+                                    <NavLink
+                                        to={item.path}
+                                        className={({ isActive }) => {
+                                            return classes(
+                                                styles.item,
+                                                isActive ? styles.active : ""
+                                            )
+                                        }}
+                                    >
+                                        {item.icon &&
+                                            <item.icon
+                                                className={styles.icon}
+                                            />
+                                        }
                                         {item.name}
                                     </NavLink>
                                 </li>

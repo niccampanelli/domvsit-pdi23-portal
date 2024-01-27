@@ -1,0 +1,20 @@
+.root {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    padding: var(--padding-sm) var(--padding-sm);
+    z-index: 10;
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    list-style: none;
+}
+
+.item {
+    padding: var(--padding-sm) var(--padding-sm);
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+}

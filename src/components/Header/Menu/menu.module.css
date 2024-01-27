@@ -1,7 +1,0 @@
-.root {
-    position: absolute;
-    display: flex;
-    flex-direction: column;
-    padding: var(--padding-sm) var(--padding-sm);
-    z-index: 10;
-}

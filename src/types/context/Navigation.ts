@@ -1,3 +1,4 @@
+import { ReactNode } from "react"
 
 export interface INavigationContext {
     navbarOpen: boolean
@@ -9,6 +10,7 @@ export interface INavigationContext {
 export type INavigationItems = Record<string, INavigationItem[]>
 
 export interface INavigationItem {
+    icon?: any
     name: string
     path: string
 }

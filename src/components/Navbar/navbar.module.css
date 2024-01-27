@@ -1,0 +1,13 @@
+.root {
+    display: flex;
+    flex-direction: column;
+    border-right: var(--border);
+    padding: var(--padding-lg);
+}
+
+.list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+    list-style: none;
+}

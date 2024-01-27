@@ -1,11 +1,11 @@
 import { memo } from "react"
 import { IToastProps } from "../../types/components/Toast"
 import { classes } from "../../util/classes"
-import Card from "../Card"
+import FloatingCard from "../FloatingCard"
 import styles from "./toast.module.css"
 import { Variants, motion } from "framer-motion"
 
-const ToastAnimationVariants: Variants = {
+const toastAnimationVariants: Variants = {
     initial: {
         scale: 0.8,
         x: "120%",
@@ -34,7 +34,7 @@ export default memo(function Toast({
     return (
         <motion.div
             key={id}
-            variants={ToastAnimationVariants}
+            variants={toastAnimationVariants}
             initial="initial"
             animate="enter"
             exit="exit"
@@ -43,7 +43,7 @@ export default memo(function Toast({
                 duration: 0.4
             }}
         >
-            <Card
+            <FloatingCard
                 className={styles.root}
             >
                 <div className={classes(styles.bar, styles[`${type}Bar`])}>
@@ -79,7 +79,7 @@ export default memo(function Toast({
                         {message}
                     </p>
                 </div>
-            </Card>
+            </FloatingCard>
         </motion.div>
     )
 })

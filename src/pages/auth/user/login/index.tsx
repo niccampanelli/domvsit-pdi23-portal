@@ -1,6 +1,7 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
+import { useNavigate } from "react-router-dom"
 import * as yup from 'yup'
 import Button from "../../../../components/Button"
 import Input from "../../../../components/Input"
@@ -38,6 +39,7 @@ export default function UserLogin() {
     })
 
     const { login } = useAuthContext()
+    const navigate = useNavigate()
 
     async function handleLogin(model: typeof defaultValues) {
         setLoading(true)
@@ -46,6 +48,7 @@ export default function UserLogin() {
             password: model.password
         })
         setLoading(false)
+        navigate("/admin")
     }
 
     return (

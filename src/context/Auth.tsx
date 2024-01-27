@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useEffect, useState } from "react"
 import authService from "../services/authService"
 import clientService from "../services/clientService"
 import { IAuthContext, IAuthProviderProps } from "../types/context/Auth"
@@ -7,6 +7,7 @@ import { IAuthenticateRequest } from "../types/services/authService"
 import { IIdentifyRequest } from "../types/services/clientService"
 import { getErrorMessageOrDefault } from "../util/getErrorMessageOrDefault"
 import { useToastsContext } from "./Toasts"
+import API from "../services/api"
 
 const AuthContext = createContext<IAuthContext>({
     login: async () => { },
@@ -14,7 +15,9 @@ const AuthContext = createContext<IAuthContext>({
     user: undefined
 })
 
-export default function AuthProvider({ children }: IAuthProviderProps) {
+export default function AuthProvider({
+    children
+}: IAuthProviderProps) {
 
     const { addToast } = useToastsContext()
 
@@ -33,6 +36,8 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
 
             localStorage.setItem("authentication_token", response.token)
             localStorage.setItem("authentication_refresh_token", response.refreshToken)
+
+            API.refreshInstances()
         }
         catch (error) {
             console.error(error)
@@ -59,6 +64,8 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
 
             localStorage.setItem("authentication_token", response.token)
             localStorage.setItem("authentication_refresh_token", response.refreshToken)
+
+            API.refreshInstances()
         }
         catch (error) {
             console.error(error)
@@ -71,6 +78,30 @@ export default function AuthProvider({ children }: IAuthProviderProps) {
             })
         }
     }
+
+    async function restoreUserData(): Promise<void> {
+        try {
+            const response = await authService.restoreUserData()
+
+            setUser(response)
+        }
+        catch (error) {
+            console.error(error)
+            var message = getErrorMessageOrDefault(error)
+
+            addToast({
+                title: "Erro ao restaurar dados do usuário",
+                message: message,
+                type: "error",
+            })
+        }
+    }
+
+    useEffect(() => {
+        if (!user) {
+            restoreUserData()
+        }
+    }, []);
 
     return (
         <AuthContext.Provider value={{

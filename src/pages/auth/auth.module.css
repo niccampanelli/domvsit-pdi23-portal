@@ -15,13 +15,6 @@
 }
 
 .logoContainer {
-    text-decoration: none;
-}
-
-.logo {
-    font-size: 3rem;
-    font-weight: 900;
-    color: var(--primary-color-500);
     margin-bottom: var(--padding-xl);
 }
 

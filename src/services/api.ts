@@ -25,13 +25,14 @@ export default class API {
         return axios.create({
             baseURL: baseURL,
             headers: {
-                Authorization: `Bearer ${localStorage.getItem("token")}`
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
+                RefreshToken: localStorage.getItem("refreshToken")
             }
         })
     }
 
-    public static setAuthHeader(token: string): void {
-        this.authApi.defaults.headers.common["Authorization"] = `Bearer ${token}`
-        this._clientApi.defaults.headers.common["Authorization"] = `Bearer ${token}`
+    public static refreshInstances(): void {
+        this._authApi = this.createInstance(import.meta.env.VITE_AUTH_API_BASE_URL)
+        this._clientApi = this.createInstance(import.meta.env.VITE_CLIENT_API_BASE_URL)
     }
 }

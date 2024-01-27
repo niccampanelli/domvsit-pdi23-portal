@@ -25,9 +25,16 @@ async function revalidateToken(): Promise<IRevalidateTokenResponse> {
     return data
 }
 
+async function restoreUserData(): Promise<IAuthenticateResponse> {
+    const { data } = await API.authApi.get<IAuthenticateResponse>("authentication/restoreUserData")
+
+    return data
+}
+
 export default {
     authenticate,
     resetPassword,
     signUp,
-    revalidateToken
+    revalidateToken,
+    restoreUserData
 }

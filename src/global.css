@@ -20,16 +20,18 @@ html {
     --tertiary-color-400: #da002f;
     --tertiary-color-300: #b40024;
     --background-color-1000: #ffffff;
-    --text-color-100: #000000;
+    --text-color-100: #333333;
     --text-color-300: #888888;
-    --text-color-500: #aaaaaa;
+    --text-color-500: #e0e0e0;
     --text-contrast-color: #ffffff;
+    --border: 2px solid var(--text-color-500);
     --box-shadow-sm: 0 0 0.1rem 0 rgba(0, 0, 0, 0.2);
     --box-shadow-md: 0 0 0.2rem 0 rgba(0, 0, 0, 0.2);
     --box-shadow-lg: 0 0 0.5rem 0 rgba(0, 0, 0, 0.2);
     --text-size-xs: 0.75rem;
     --text-size-sm: 0.875rem;
     --text-size-md: 1rem;
+    --text-size-lg: 1.25rem;
     --padding-xs: 0.25rem;
     --padding-sm: 0.5rem;
     --padding-md: 0.75rem;
@@ -49,6 +51,7 @@ html {
     border: none;
     box-sizing: border-box;
     font-family: 'Manrope', sans-serif;
+    color: var(--text-color-100);
 }
 
 .toastsRoot {

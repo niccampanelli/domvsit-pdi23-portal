@@ -4,28 +4,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    padding: var(--padding-xl) var(--padding-xl);
-    gap: var(--gap-sm);
-}
-
-.section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     padding: var(--padding-md) var(--padding-md);
     gap: var(--gap-sm);
-    border-radius: var(--border-radius-md);
-    border: var(--border);
-}
-
-.sectionTitle {
-    font-size: var(--text-size-lg);
-    font-weight: 800;
-}
-
-.clientList {
-    flex: 1;
-    display: flex;
-    flex-direction: row;
-    gap: var(--gap-sm);
+    overflow-y: auto;
 }

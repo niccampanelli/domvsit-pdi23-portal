@@ -8,6 +8,9 @@ import Link from '../../../../components/Link'
 import Spinner from '../../../../components/Spinner'
 import clientService from '../../../../services/clientService'
 import styles from "../../auth.module.css"
+import { getErrorMessageOrDefault } from '../../../../util/getErrorMessageOrDefault'
+import { useToastsContext } from '../../../../context/Toasts'
+import { useNavigate } from 'react-router-dom'
 
 const defaultValues = {
     name: '',
@@ -34,8 +37,6 @@ const schema = yup.object().shape({
 
 export default function AttendantJoin() {
 
-    const [loading, setLoading] = useState(false)
-
     const {
         control,
         handleSubmit
@@ -45,15 +46,51 @@ export default function AttendantJoin() {
         resolver: yupResolver(schema)
     })
 
+    const { addToast } = useToastsContext()
+    const navigate = useNavigate()
+
+    const [loading, setLoading] = useState(false)
+
     async function handleJoin(model: typeof defaultValues) {
         setLoading(true)
-        await clientService.join({
-            name: model.name,
-            email: model.email,
-            role: model.role,
-            attendantToken: model.attendantToken
-        })
-        setLoading(false)
+
+        try {
+            const result = await clientService.join({
+                name: model.name,
+                email: model.email,
+                role: model.role,
+                attendantToken: model.attendantToken
+            })
+
+            addToast({
+                title: "Você agora faz parte deste cliente",
+                message: `Agora você pode acessar o portal do cliente utilizando seu email e o código de participante.`,
+            })
+
+            if (result.isEmailInDomain === false) {
+                addToast({
+                    title: "Email não pertence ao domínio do cliente",
+                    message: `O email informado não pertence ao domínio do cliente. Você pode alterar o seu email no portal do cliente.`,
+                    type: "warning"
+                })
+            }
+
+            navigate("/attendant/login")
+        }
+        catch (error) {
+            console.error(error)
+            var message = getErrorMessageOrDefault(error)
+
+            addToast({
+                title: "Erro ao fazer login",
+                message: message,
+                type: "error",
+            })
+        }
+        finally {
+            setLoading(false)
+        }
+
     }
 
     return (
@@ -68,7 +105,7 @@ export default function AttendantJoin() {
                 render={({ field, fieldState: { error } }) =>
                     <Input
                         {...field}
-                        placeholder="Nome"
+                        placeholder="Nome completo"
                         error={error?.message}
                         autoFocus
                     />
@@ -80,7 +117,7 @@ export default function AttendantJoin() {
                 render={({ field, fieldState: { error } }) =>
                     <Input
                         {...field}
-                        placeholder="Email"
+                        placeholder="Email corporativo"
                         type="email"
                         error={error?.message}
                     />

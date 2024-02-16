@@ -10,8 +10,8 @@ export default function Card({
 
     return (
         <div
-            className={classes(styles.root, styles[size], props.className)}
             {...props}
+            className={classes(styles.root, styles[size], props.className)}
         >
             {children}
         </div>

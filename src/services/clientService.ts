@@ -2,13 +2,13 @@ import { IIdentifyRequest, IIdentifyResponse, IJoinRequest, IJoinResponse } from
 import API from "./api";
 
 async function authenticate(request: IIdentifyRequest): Promise<IIdentifyResponse> {
-    const { data } = await API.clientApi.post<IIdentifyResponse>("client/authenticate", request)
+    const { data } = await API.clientApi.post<IIdentifyResponse>("attendant/authenticate", request)
 
     return data
 }
 
 async function join(request: IJoinRequest): Promise<IJoinResponse> {
-    const { data } = await API.clientApi.post<IJoinResponse>("client/joinAsAttendant", request)
+    const { data } = await API.clientApi.post<IJoinResponse>("attendant/joinAsAttendant", request)
 
     return data
 }

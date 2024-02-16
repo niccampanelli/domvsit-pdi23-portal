@@ -20,8 +20,9 @@ async function signUp(request: ISignUpRequest): Promise<ISignUpResponse> {
 }
 
 async function revalidateToken(): Promise<IRevalidateTokenResponse> {
+    console.log("revalidaaaano")
     const { data } = await API.authApi.post<IRevalidateTokenResponse>("authentication/revalidateToken")
-
+    console.log("revalidouuuu", data)
     return data
 }
 

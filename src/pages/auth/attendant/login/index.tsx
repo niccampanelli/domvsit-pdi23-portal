@@ -60,7 +60,7 @@ export default function AttendantLogin() {
                 render={({ field, fieldState: { error } }) =>
                     <Input
                         {...field}
-                        placeholder="Email"
+                        placeholder="Email corporativo"
                         type="email"
                         error={error?.message}
                         autoFocus

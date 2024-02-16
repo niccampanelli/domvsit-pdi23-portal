@@ -5,7 +5,7 @@ import Routes from "./pages/routes"
 export default function App() {
 
     return (
-        <ToastsProvider dismissTimeInSeconds={5}>
+        <ToastsProvider dismissTimeInSeconds={8}>
             <AuthProvider>
                 <Routes />
             </AuthProvider>

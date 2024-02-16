@@ -11,6 +11,7 @@ export interface IUserData extends ICommomData {
 
 export interface IAttendantData extends ICommomData{
     role?: string
+    clientId?: number
 }
 
 export type IUser = IUserData | IAttendantData

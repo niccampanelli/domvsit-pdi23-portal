@@ -11,6 +11,7 @@ import Main from "./main"
 import NavigationProvider from "../context/Navigation"
 import { useAuthContext } from "../context/Auth"
 import LoadingRoutes from "../components/LoadingRoutes"
+import ErrorBoundary from "../components/ErrorBoundary"
 
 function ProtectedRoute() {
 
@@ -56,6 +57,7 @@ export default function Routes() {
         {
             path: "/",
             element: <NavigationProvider />,
+            errorElement: <ErrorBoundary />,
             children: [
                 {
                     path: "/",

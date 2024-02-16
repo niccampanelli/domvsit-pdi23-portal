@@ -10,4 +10,7 @@ export default defineConfig({
     }
   },
   plugins: [svgr(), react()],
+  server: {
+    port: 3000,
+  }
 })

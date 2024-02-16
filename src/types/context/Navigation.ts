@@ -1,5 +1,3 @@
-import { ReactNode } from "react"
-
 export interface INavigationContext {
     navbarOpen: boolean
     toggleNavbar: (open?: boolean) => void

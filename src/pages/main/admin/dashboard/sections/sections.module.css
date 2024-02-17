@@ -11,4 +11,5 @@
 .sectionTitle {
     font-size: var(--text-size-lg);
     font-weight: 800;
+    margin-bottom: var(--gap-sm);
 }

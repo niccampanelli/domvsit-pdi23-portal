@@ -6,13 +6,14 @@ import { classes } from "../../util/classes";
 export default function Link({
     color = "primary",
     children,
+    className,
     ...props
 }: ILinkProps) {
 
     return (
         <RouterLink
-            className={classes(styles.root, styles[color], props.className)}
             {...props}
+            className={classes(styles.root, styles[color], className)}
         >
             {children}
         </RouterLink>

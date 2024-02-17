@@ -1,7 +1,7 @@
 import { Navigate, Outlet, RouterProvider, createBrowserRouter } from "react-router-dom"
-import Admin from "./main/admin"
+import Dashboard from "./main/admin/dashboard"
 import Auth from "./auth"
-import Clients from "./main/clients"
+import Clients from "./main/client"
 import UserSignUp from "./auth/user/signup"
 import UserLogin from "./auth/user/login"
 import Home from "./home"
@@ -12,6 +12,7 @@ import NavigationProvider from "../context/Navigation"
 import { useAuthContext } from "../context/Auth"
 import LoadingRoutes from "../components/LoadingRoutes"
 import ErrorBoundary from "../components/ErrorBoundary"
+import Events from "./main/admin/events"
 
 function ProtectedRoute() {
 
@@ -102,8 +103,17 @@ export default function Routes() {
                             children: [
                                 {
                                     path: "/admin",
-                                    index: true,
-                                    element: <Admin />
+                                    children: [
+                                        {
+                                            path: "/admin",
+                                            element: <Dashboard />,
+                                            index: true
+                                        },
+                                        {
+                                            path: "/admin/events",
+                                            element: <Events />
+                                        }
+                                    ]
                                 },
                                 {
                                     path: "/clients",

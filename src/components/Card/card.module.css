@@ -1,5 +1,6 @@
 .root {
     border: var(--border);
+    background-color: var(--background-color-1000);
 }
 
 .small {

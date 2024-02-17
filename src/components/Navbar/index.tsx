@@ -41,6 +41,7 @@ export default function Navbar() {
                                 <li key={item.name}>
                                     <NavLink
                                         to={item.path}
+                                        end
                                         className={({ isActive }) => {
                                             return classes(
                                                 styles.item,

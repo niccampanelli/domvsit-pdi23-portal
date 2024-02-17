@@ -11,6 +11,8 @@ export default function Input({
     value = "",
     error,
     type = "text",
+    lines,
+    className,
     ...props
 }: IInputProps) {
 
@@ -21,14 +23,25 @@ export default function Input({
             <div
                 className={styles.root}
             >
-                <input
-                    className={classes(styles.input, props.className)}
-                    placeholder={placeholder}
-                    onChange={onChange}
-                    value={value}
-                    type={type}
-                    {...props}
-                />
+                {lines ?
+                    <textarea
+                        className={classes(styles.input, className)}
+                        placeholder={placeholder}
+                        onChange={onChange}
+                        value={value}
+                        rows={lines}
+                        {...props}
+                    />
+                    :
+                    <input
+                        className={classes(styles.input, className)}
+                        placeholder={placeholder}
+                        onChange={onChange}
+                        value={value}
+                        type={type === "password" && inputVisible ? "text" : type}
+                        {...props}
+                    />
+                }
                 {type === "password" &&
                     <button
                         className={styles.button}

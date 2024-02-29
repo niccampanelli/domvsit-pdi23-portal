@@ -3,8 +3,8 @@ export interface IPaginationRequest {
     limit?: number
 }
 
-export interface ISortingRequest {
-    sortField?: string
+export interface ISortingRequest<T> {
+    sortField?: T
     sortOrder?: string
 }
 

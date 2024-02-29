@@ -78,26 +78,8 @@ html {
     pointer-events: none;
 }
 
-.modalRoot {
-    overflow: hidden;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    height: 100vh;
-    z-index: 9998;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: var(--gap-sm);
-    padding: var(--padding-lg);
-    background-color: var(--backdrop-color-500);
-}
-
-.modalContainer {
-    max-height: 100%;
+.modal {
+    border-radius: var(--border-radius-md);
 }
 
 .separator {

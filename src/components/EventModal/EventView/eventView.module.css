@@ -4,6 +4,25 @@
     gap: var(--gap-md);
 }
 
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.action {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    background-color: transparent;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+.action:hover {
+    opacity: 0.3;
+}
+
 .section {
     display: flex;
     flex-direction: column;
@@ -47,6 +66,26 @@
     text-decoration: none;
 }
 
+.clientSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-sm);
+}
+
+.clientAvatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    color: var(--text-contrast-color);
+    font-size: var(--text-size-xs);
+    font-weight: 700;
+}
+
 .tagSection {
     display: flex;
     flex-direction: row;
@@ -65,6 +104,13 @@
     font-weight: 700;
 }
 
+.attendantList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gap-xs);
+}
+
 .attendant {
     display: flex;
     align-items: center;
@@ -73,7 +119,6 @@
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
-    background-color: var(--primary-color-500);
     color: var(--text-contrast-color);
     font-size: var(--text-size-xs);
     font-weight: 700;

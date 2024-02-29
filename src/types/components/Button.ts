@@ -6,4 +6,5 @@ export interface IButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
     children?: React.ReactNode
     link?: boolean
     to?: string
+    variant?: "primary" | "secondary"
 }

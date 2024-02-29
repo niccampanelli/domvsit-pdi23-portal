@@ -19,9 +19,11 @@ export default function Input({
     const [inputVisible, setInputVisible] = useState(type !== "password")
 
     return (
-        <div>
+        <div
+            className={styles.root}
+        >
             <div
-                className={styles.root}
+                className={styles.container}
             >
                 {lines ?
                     <textarea

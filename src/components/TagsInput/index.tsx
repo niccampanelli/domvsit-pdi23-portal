@@ -1,4 +1,4 @@
-import { ChangeEvent, KeyboardEvent, useState } from "react";
+import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import { ITagsInputProps } from "../../types/components/TagsInput";
 import styles from "./tagsInput.module.css"
 
@@ -33,6 +33,10 @@ export default function TagsInput({
             setTags(previous => previous.slice(0, -1))
         }
     }
+
+    useEffect(() => {
+        setTags(value)
+    }, [value])
 
     return (
         <div>

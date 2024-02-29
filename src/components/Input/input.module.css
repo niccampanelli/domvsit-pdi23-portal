@@ -1,19 +1,25 @@
 .root {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
     display: flex;
     border: 2px solid var(--primary-color-500);
     border-radius: var(--border-radius-sm);
     position: relative;
 }
 
-.root:hover {
+.container:hover {
     border-color: var(--primary-color-700);
 }
 
-.root:hover .input {
+.container:hover .input {
     color: var(--primary-color-700);
 }
 
-.root:hover .input::placeholder {
+.container:hover .input::placeholder {
     color: var(--text-color-500);
 }
 

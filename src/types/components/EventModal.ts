@@ -1,13 +1,33 @@
-import { IModalProps } from "./Modal";
+import { IListAttendantResponseItem, IListClientResponseItem } from "../services/clientService";
+import { IListResponseItem } from "../services/eventService";
 
-interface IEventAttendant {
-    id: number
-    eventId: number
-    attendantId: number
+export interface IEventModalProps {
+    event?: IListResponseItem
+    open: boolean
+    onClose: () => void
+    mode?: "edit" | "view" | "create"
 }
 
-interface IEventModalItem {
-    id?: number
+export interface IEventDataClient {
+    id: number
+    name: string
+    email: string
+    phone: string
+    consultorId: number
+    createdAt: Date
+}
+
+export interface IEventDataAttendant {
+    id: number
+    name?: string
+    email?: string
+    role?: string
+    clientId?: number
+    createdAt?: Date
+}
+
+export interface IEventModalEventData {
+    id: number
     title: string
     description: string
     tags?: string[]
@@ -16,17 +36,37 @@ interface IEventModalItem {
     ocurrence: Date
     createdAt: Date
     updatedAt: Date
-    eventAttendants: IEventAttendant[]
-}
-
-export interface IEventModalProps extends Omit<IModalProps, "children" | "title"> {
-    event?: IEventModalItem
 }
 
 export interface IEventViewProps {
-    event: IEventModalItem
+    event?: IEventModalEventData
+    client?: IEventDataClient
+    attendants?: IEventDataAttendant[]
+    eventClientLoading?: boolean
+    eventAttendantsLoading?: boolean
+    onActionClick: () => void
 }
 
 export interface IEventEditProps {
-    event: IEventModalItem
+    event?: IEventModalEventData
+    client?: IEventDataClient
+    attendants?: IEventDataAttendant[]
+    eventClientLoading?: boolean
+    eventAttendantsLoading?: boolean
+    onActionClick: () => void
+}
+
+export interface IEventAttedantsModalProps {
+    open: boolean
+    onClose: () => void
+    handleSelectAttendants: (attendants: IListAttendantResponseItem[]) => void
+    clientId: number
+    consultorId: number
+}
+
+export interface IEventClientsModalProps {
+    open: boolean
+    onClose: () => void
+    handleSelectClient: (client: IListClientResponseItem) => void,
+    consultorId: number
 }

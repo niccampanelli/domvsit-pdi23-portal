@@ -10,6 +10,7 @@ export default function Button({
     className,
     link,
     to,
+    variant = "primary",
     ...props
 }: IButtonProps) {
 
@@ -17,7 +18,7 @@ export default function Button({
         (
             <ButtonLink
                 to={to}
-                className={classes(styles.root, className)}
+                className={classes(styles.root, styles[variant], className)}
                 disabled={disabled}
             >
                 {children}
@@ -27,7 +28,7 @@ export default function Button({
         (
             <button
                 onClick={onClick}
-                className={classes(styles.root, className)}
+                className={classes(styles.root, styles[variant], className)}
                 disabled={disabled}
                 {...props}
             >

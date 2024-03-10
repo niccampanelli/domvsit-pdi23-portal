@@ -1,0 +1,125 @@
+.content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-md);
+}
+
+.header {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.action {
+    width: 2rem;
+    height: 2rem;
+    cursor: pointer;
+    background-color: transparent;
+    opacity: 1;
+    transition: opacity 0.2s;
+}
+
+.action:hover {
+    opacity: 0.3;
+}
+
+.section {
+    display: flex;
+    flex-direction: column;
+    gap: var(--gap-sm);
+}
+
+.subtitle {
+    font-size: var(--text-size-md);
+    font-weight: 700;
+}
+
+.text {
+    font-size: var(--text-size-sm);
+}
+
+.observation {
+    font-size: var(--text-size-xs);
+    color: var(--text-color-300);
+}
+
+.linkSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: var(--gap-xs);
+    background-color: var(--background-color-800);
+    font-size: var(--text-size-xs);
+    font-weight: 700;
+    padding: var(--padding-xs);
+    border-radius: var(--border-radius-sm);
+    width: fit-content;
+}
+
+.linkIcon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.clientSection {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: var(--gap-sm);
+}
+
+.clientAvatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    color: var(--text-contrast-color);
+    font-size: var(--text-size-xs);
+    font-weight: 700;
+}
+
+.tagSection {
+    display: flex;
+    flex-direction: row;
+    gap: var(--gap-xs);
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.tag {
+    width: fit-content;
+    padding: var(--padding-xs);
+    border-radius: var(--border-radius-sm);
+    background-color: var(--primary-color-500);
+    color: var(--text-contrast-color);
+    font-size: var(--text-size-xs);
+    font-weight: 700;
+}
+
+.attendantList {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gap-xs);
+}
+
+.attendant {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+    color: var(--text-contrast-color);
+    font-size: var(--text-size-xs);
+    font-weight: 700;
+}

@@ -1,0 +1,15 @@
+.root {
+    text-decoration: none;
+}
+
+.root:hover {
+    text-decoration: underline;
+}
+
+.primary {
+    color: var(--primary-color-500);
+}
+
+.default {
+    color: var(--text-color-100);
+}

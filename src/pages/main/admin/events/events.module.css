@@ -1,0 +1,24 @@
+.root {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: var(--padding-md) var(--padding-md);
+    gap: var(--gap-sm);
+    overflow: hidden;
+}
+
+.header {
+    margin-bottom: var(--gap-sm);
+}
+
+.list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--gap-sm);
+    overflow-y: auto;
+}
+
+.item {
+    width: 20%;
+}

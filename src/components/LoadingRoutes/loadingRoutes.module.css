@@ -1,0 +1,10 @@
+.root {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--background-color-1000);
+}

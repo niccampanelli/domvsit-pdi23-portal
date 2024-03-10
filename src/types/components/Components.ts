@@ -1,0 +1,1 @@
+export type ComponentSizesType = "small" | "medium" | "large";

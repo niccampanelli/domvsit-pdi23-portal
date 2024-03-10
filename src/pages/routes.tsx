@@ -11,6 +11,7 @@ import AttendantSignUp from "./auth/attendant/SignUp"
 import Home from "./home"
 import Main from "./main"
 import AdminDashboard from "./main/admin/dashboard"
+import AdminEvents from "./main/admin/events"
 
 function AuthenticationRoutes({
     children
@@ -98,6 +99,10 @@ export default function Routes() {
                         {
                             path: "/admin",
                             element: <AdminDashboard />
+                        },
+                        {
+                            path: "/admin/events",
+                            element: <AdminEvents />
                         }
                     ]
                 }

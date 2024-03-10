@@ -2,7 +2,6 @@ import { LinkOutlined } from "@mui/icons-material"
 import { Card, CardActionArea, CardContent, Chip, Typography, styled } from "@mui/material"
 import moment from "moment"
 import { IEventCardProps } from "../../types/components/EventCard"
-import getColorFromSring from "../../util/getColorFromString"
 
 const StyledCard = styled(Card)(({ theme }) => ({
     borderTop: `8px solid ${theme.palette.primary.main}`

@@ -1,5 +1,4 @@
 import { createTheme } from "@mui/material"
-import { color } from "framer-motion"
 
 const theme = createTheme({
     typography: {
@@ -40,6 +39,18 @@ const theme = createTheme({
                 root: ({ theme }) => ({
                     color: theme.palette.primary.main
                 })
+            }
+        },
+        MuiFab: {
+            defaultProps: {
+                color: "primary",
+            },
+        },
+        MuiDialogTitle: {
+            styleOverrides: {
+                root: {
+                    fontWeight: 600
+                }
             }
         }
     }

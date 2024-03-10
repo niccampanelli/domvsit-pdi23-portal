@@ -1,5 +1,6 @@
 import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled } from "@mui/material"
 import { useNavigationContext } from "../../context/Navigation"
+import { useNavigate } from "react-router-dom"
 
 const NavigationButton = styled(ListItemButton)(({ theme }) => ({
     "&.Mui-selected": {
@@ -18,6 +19,7 @@ const NavigationButton = styled(ListItemButton)(({ theme }) => ({
 export default function Navbar() {
 
     const { navigationItems } = useNavigationContext()
+    const navigate = useNavigate()
 
     return (
         <section
@@ -35,6 +37,7 @@ export default function Navbar() {
                             <NavigationButton
                                 className="rounded-lg"
                                 selected={item.active}
+                                onClick={() => navigate(item.path)}
                             >
                                 <ListItemIcon>
                                     {item.icon}

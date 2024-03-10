@@ -12,6 +12,7 @@ import Home from "./home"
 import Main from "./main"
 import AdminDashboard from "./main/admin/dashboard"
 import AdminEvents from "./main/admin/events"
+import AdminClients from "./main/admin/clients"
 
 function AuthenticationRoutes({
     children
@@ -103,6 +104,10 @@ export default function Routes() {
                         {
                             path: "/admin/events",
                             element: <AdminEvents />
+                        },
+                        {
+                            path: "/admin/clients",
+                            element: <AdminClients />
                         }
                     ]
                 }

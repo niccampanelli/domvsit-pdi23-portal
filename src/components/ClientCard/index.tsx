@@ -1,5 +1,6 @@
-import { Card, CardHeader } from "@mui/material";
+import { Avatar, Card, CardActionArea, CardHeader, Typography } from "@mui/material";
 import { IClientCardProps } from "../../types/components/ClientCard";
+import getColorFromSring from "../../util/getColorFromString";
 
 export default function ClientCard({
     client
@@ -7,10 +8,35 @@ export default function ClientCard({
 
     return (
         <Card>
-            <CardHeader
-                title={client.name}
-                subheader={client.email}
-            />
+            <CardActionArea>
+                <CardHeader
+                    avatar={
+                        <Avatar
+                            alt={client.name}
+                            sx={{
+                                bgcolor: getColorFromSring(client.name)
+                            }}
+                        >
+                            {client.name[0]}
+                        </Avatar>
+                    }
+                    title={
+                        <Typography
+                            variant="h3"
+                            className="font-bold text-base"
+                        >
+                            {client.name}
+                        </Typography>
+                    }
+                    subheader={
+                        <Typography
+                            className="text-xs"
+                        >
+                            {client.email}
+                        </Typography>
+                    }
+                />
+            </CardActionArea>
         </Card>
     )
 }

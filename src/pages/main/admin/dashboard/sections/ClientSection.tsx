@@ -5,6 +5,7 @@ import { useToastsContext } from "../../../../../context/Toasts"
 import clientService from "../../../../../services/clientService"
 import { IListClientResponseItem } from "../../../../../types/services/clientService"
 import { getErrorMessageOrDefault } from "../../../../../util/getErrorMessageOrDefault"
+import ClientCardLoading from "../../../../../components/ClientCard/loading"
 
 export default function ClientSection() {
 
@@ -55,11 +56,32 @@ export default function ClientSection() {
                 spacing={2}
             >
                 {loading ?
-                    <Grid
-                        item
-                        xs={3}
-                    >
-                    </Grid>
+                    <>
+                        <Grid
+                            item
+                            xs={3}
+                        >
+                            <ClientCardLoading />
+                        </Grid>
+                        <Grid
+                            item
+                            xs={3}
+                        >
+                            <ClientCardLoading />
+                        </Grid>
+                        <Grid
+                            item
+                            xs={3}
+                        >
+                            <ClientCardLoading />
+                        </Grid>
+                        <Grid
+                            item
+                            xs={3}
+                        >
+                            <ClientCardLoading />
+                        </Grid>
+                    </>
                     :
                     clients.map(client => (
                         <Grid

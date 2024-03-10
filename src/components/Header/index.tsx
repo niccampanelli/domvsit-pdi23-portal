@@ -1,5 +1,5 @@
 import { ExitToAppOutlined, Person2Outlined } from "@mui/icons-material"
-import { Avatar, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from "@mui/material"
+import { Avatar, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip, Typography } from "@mui/material"
 import { useAuthContext } from "../../context/Auth"
 import { useState } from "react"
 import { useNavigationContext } from "../../context/Navigation"
@@ -22,11 +22,14 @@ export default function Header() {
 
     return (
         <header
-            className="flex justify-between items-center p-4"
+            className="flex justify-between items-center p-4 border-b-2 border-black border-b-solid"
         >
-            <h1>
+            <Typography
+                variant="h1"
+                className="text-2xl font-bold"
+            >
                 {currentNavigation?.label}
-            </h1>
+            </Typography>
             <Tooltip
                 title={user?.name}
                 arrow

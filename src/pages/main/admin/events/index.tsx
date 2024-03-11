@@ -1,13 +1,14 @@
 import { AddOutlined } from "@mui/icons-material";
 import { Fab, Grid, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
+import EventCard from "../../../../components/EventCard";
+import EventCardLoading from "../../../../components/EventCard/loading";
 import { useToastsContext } from "../../../../context/Toasts";
 import eventService from "../../../../services/eventService";
 import { IListResponseItem } from "../../../../types/services/eventService";
 import { getErrorMessageOrDefault } from "../../../../util/getErrorMessageOrDefault";
-import EventCardLoading from "../../../../components/EventCard/loading";
-import EventCard from "../../../../components/EventCard";
-import EventModal from "../../../../components/EventModal";
+import EventViewModal from "../../../../components/EventViewModal";
+import EventEditModal from "../../../../components/EventEditModal";
 
 export default function AdminEvents() {
 
@@ -15,7 +16,9 @@ export default function AdminEvents() {
 
     const [events, setEvents] = useState<IListResponseItem[]>([])
     const [loading, setLoading] = useState(true)
-    const [modalOpen, setModalOpen] = useState(false)
+    const [viewModalOpen, setViewModalOpen] = useState(false)
+    const [editModalOpen, setEditModalOpen] = useState(false)
+    const [selectedEvent, setSelectedEvent] = useState<IListResponseItem | undefined>(undefined)
 
     async function fetchEvents() {
         setLoading(true)
@@ -45,6 +48,7 @@ export default function AdminEvents() {
     useEffect(() => {
         fetchEvents()
     }, [])
+
     return (
         <div className="flex flex-1 flex-col gap-8 p-4">
             <div className="flex justify-between items-center">
@@ -127,6 +131,10 @@ export default function AdminEvents() {
                             >
                                 <EventCard
                                     event={event}
+                                    onClick={() => {
+                                        setSelectedEvent(event)
+                                        setEditModalOpen(true)
+                                    }}
                                 />
                             </Grid>
                         ))
@@ -140,14 +148,23 @@ export default function AdminEvents() {
             >
                 <Fab
                     className="fixed bottom-8 right-8"
-                    onClick={() => setModalOpen(true)}
+                    onClick={() => {
+                        setSelectedEvent(undefined)
+                        setEditModalOpen(true)
+                    }}
                 >
                     <AddOutlined />
                 </Fab>
             </Tooltip>
-            <EventModal
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
+            <EventViewModal
+                open={viewModalOpen}
+                onClose={() => setViewModalOpen(false)}
+                event={selectedEvent}
+            />
+            <EventEditModal
+                open={editModalOpen}
+                onClose={() => setEditModalOpen(false)}
+                event={selectedEvent}
             />
         </div>
     )

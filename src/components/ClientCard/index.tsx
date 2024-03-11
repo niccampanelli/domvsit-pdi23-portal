@@ -1,6 +1,6 @@
 import { Avatar, Card, CardActionArea, CardHeader, Typography } from "@mui/material";
 import { IClientCardProps } from "../../types/components/ClientCard";
-import getColorFromSring from "../../util/getColorFromString";
+import getColorFromString from "../../util/getColorFromString";
 
 export default function ClientCard({
     client
@@ -14,7 +14,7 @@ export default function ClientCard({
                         <Avatar
                             alt={client.name}
                             sx={{
-                                bgcolor: getColorFromSring(client.name)
+                                bgcolor: getColorFromString(client.name)
                             }}
                         >
                             {client.name[0]}

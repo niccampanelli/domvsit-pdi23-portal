@@ -74,6 +74,7 @@ export default function AdminLogin() {
                         placeholder="Digite o seu email"
                         type="email"
                         autoComplete="email"
+                        required
                         error={!!error}
                         helperText={error?.message}
                         fullWidth
@@ -96,6 +97,7 @@ export default function AdminLogin() {
                         placeholder="Digite a sua senha"
                         type={passwordVisible ? "text" : "password"}
                         autoComplete="current-password"
+                        required
                         error={!!error}
                         helperText={error?.message}
                         fullWidth

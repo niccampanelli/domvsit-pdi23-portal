@@ -8,7 +8,8 @@ const StyledCard = styled(Card)(({ theme }) => ({
 }))
 
 export default function EventCard({
-    event
+    event,
+    onClick = () => { }
 }: IEventCardProps) {
 
     function getFormattedOcurrence(ocurrence: Date) {
@@ -24,7 +25,9 @@ export default function EventCard({
 
     return (
         <StyledCard>
-            <CardActionArea>
+            <CardActionArea
+                onClick={onClick}
+            >
                 <CardContent>
                     <div className="flex flex-row gap-2 mb-4">
                         <Chip

@@ -7,7 +7,7 @@ export default {
     theme: {
         extend: {},
     },
-    important: "#root",
+    important: "body",
     plugins: [],
     corePlugins: {
         preflight: false

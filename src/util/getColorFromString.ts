@@ -1,4 +1,6 @@
-export default function getColorFromSring(string: string) {
+export default function getColorFromString(string: string) {
+    if (!string) return '#000000';
+
     let hash = 0;
     let i;
 

@@ -9,4 +9,5 @@ interface IEventCardEvent {
 
 export interface IEventCardProps {
     event: IEventCardEvent
+    onClick?: () => void
 }

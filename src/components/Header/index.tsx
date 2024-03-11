@@ -6,7 +6,7 @@ import { useNavigationContext } from "../../context/Navigation"
 
 export default function Header() {
 
-    const { user } = useAuthContext()
+    const { user, logout } = useAuthContext()
     const { currentNavigation } = useNavigationContext()
 
     const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null)
@@ -70,7 +70,7 @@ export default function Header() {
                         primary={user?.name || "Nome do usuário"}
                     />
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={() => logout()}>
                     <ListItemIcon>
                         <ExitToAppOutlined />
                     </ListItemIcon>

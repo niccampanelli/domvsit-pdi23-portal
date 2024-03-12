@@ -1,5 +1,5 @@
 import { EditOutlined, LinkOutlined } from "@mui/icons-material";
-import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Fab, Skeleton, Tooltip, Typography } from "@mui/material";
+import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Fab, Skeleton, Tooltip, Typography, styled } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useToastsContext } from "../../context/Toasts";
@@ -9,6 +9,7 @@ import { IGetAttendantByIdResponse, IGetClientByIdResponse } from "../../types/s
 import getColorFromString from "../../util/getColorFromString";
 import { getErrorMessageOrDefault } from "../../util/getErrorMessageOrDefault";
 import getInitials from "../../util/getInitials";
+import EventViewModalAttendantsLoading from "./attendantsLoading";
 
 export default function EventViewModal({
     open,
@@ -86,17 +87,27 @@ export default function EventViewModal({
     }, [event])
 
     return (
-        <Dialog maxWidth="xs" fullWidth open={open} onClose={onClose}>
+        <Dialog
+            maxWidth="xs"
+            fullWidth
+            open={open}
+            onClose={onClose}
+            PaperProps={{
+                sx: theme => ({
+                    borderTop: `8px solid ${theme.palette.primary.main}`
+                })
+            }}
+        >
             <DialogTitle>
                 {event?.title}
             </DialogTitle>
             <DialogContent className="flex flex-col items-start gap-4">
-                <Typography
-                    variant="caption"
-                    color="textSecondary"
-                >
-                    {moment(event?.createdAt).format("[Criado em] DD/MM/YYYY [às] HH:mm")} | {moment(event?.updatedAt).format("[Última atualização em] DD/MM/YYYY [às] HH:mm")}
-                </Typography>
+                <div>
+                    <Chip
+                        label={moment(event?.ocurrence).format("dddd, DD [de] MMMM [de] YYYY [às] HH:mm").replace(/^[a-z]/, (c) => c.toUpperCase())}
+                        color="primary"
+                    />
+                </div>
                 <Typography>
                     {event?.description}
                 </Typography>
@@ -106,30 +117,34 @@ export default function EventViewModal({
                     <Typography
                         className="font-bold"
                     >
-                        Ocorre em
+                        Participantes
                     </Typography>
-                    <Typography>
-                        {moment(event?.ocurrence).format("dddd, DD [de] MMMM [de] YYYY [às] HH:mm").replace(/^[a-z]/, (c) => c.toUpperCase())}
-                    </Typography>
-                </div>
-                {event?.link &&
-                    <Tooltip
-                        title="O evento ocorrerá neste link"
-                        arrow
+                    <div
+                        className="flex flex-wrap gap-1"
                     >
-                        <Chip
-                            icon={
-                                <LinkOutlined />
-                            }
-                            label={event?.link}
-                            clickable
-                            component="a"
-                            href={event?.link}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                        />
-                    </Tooltip>
-                }
+                        {attendantsLoading ?
+                            <EventViewModalAttendantsLoading />
+                            :
+                            attendants.map(attendant => (
+                                <Tooltip
+                                    title={attendant.name}
+                                    arrow
+                                >
+                                    <Avatar
+                                        alt={attendant.name}
+                                        sx={{
+                                            bgcolor: getColorFromString(attendant.name),
+                                            fontSize: 14,
+                                            width: 32,
+                                            height: 32
+                                        }}
+                                    >
+                                        {getInitials(attendant.name)}
+                                    </Avatar>
+                                </Tooltip>
+                            ))}
+                    </div>
+                </div>
                 <div
                     className="flex flex-col gap-2"
                 >
@@ -174,6 +189,33 @@ export default function EventViewModal({
                         </Typography>
                     </div>
                 </div>
+                <div
+                    className="flex flex-col gap-2"
+                >
+                    <Typography
+                        className="font-bold"
+                    >
+                        Link associado
+                    </Typography>
+                    {event?.link &&
+                        <Tooltip
+                            title="O evento ocorrerá neste link"
+                            arrow
+                        >
+                            <Chip
+                                icon={
+                                    <LinkOutlined />
+                                }
+                                label={event?.link}
+                                clickable
+                                component="a"
+                                href={event?.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            />
+                        </Tooltip>
+                    }
+                </div>
                 <Divider
                     className="w-full"
                 />
@@ -190,56 +232,11 @@ export default function EventViewModal({
                         ))}
                     </div>
                 }
-                <div
-                    className="flex flex-col gap-2"
+                <Typography
+                    variant="caption"
                 >
-                    <Typography
-                        className="font-bold"
-                    >
-                        Participantes
-                    </Typography>
-                    <div
-                        className="flex flex-wrap gap-1"
-                    >
-                        {attendantsLoading ?
-                            <>
-                                <Skeleton
-                                    variant="circular"
-                                    width={32}
-                                    height={32}
-                                />
-                                <Skeleton
-                                    variant="circular"
-                                    width={32}
-                                    height={32}
-                                />
-                                <Skeleton
-                                    variant="circular"
-                                    width={32}
-                                    height={32}
-                                />
-                            </>
-                            :
-                            attendants.map(attendant => (
-                                <Tooltip
-                                    title={attendant.name}
-                                    arrow
-                                >
-                                    <Avatar
-                                        alt={attendant.name}
-                                        sx={{
-                                            bgcolor: getColorFromString(attendant.name),
-                                            fontSize: 14,
-                                            width: 32,
-                                            height: 32
-                                        }}
-                                    >
-                                        {getInitials(attendant.name)}
-                                    </Avatar>
-                                </Tooltip>
-                            ))}
-                    </div>
-                </div>
+                    {moment(event?.createdAt).format("[Criado em] DD/MM/YYYY [às] HH:mm")} | {moment(event?.updatedAt).format("[Última atualização em] DD/MM/YYYY [às] HH:mm")}
+                </Typography>
             </DialogContent>
             {openEditModal &&
                 <Tooltip

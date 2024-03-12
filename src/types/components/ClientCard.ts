@@ -5,5 +5,6 @@ export interface IClientCardClient {
 }
 
 export interface IClientCardProps {
-    client: IClientCardClient
+    client: IClientCardClient,
+    onClick?: () => void
 }

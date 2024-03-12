@@ -7,6 +7,9 @@ import clientService from "../../../../services/clientService";
 import { IListClientResponseItem } from "../../../../types/services/clientService";
 import { getErrorMessageOrDefault } from "../../../../util/getErrorMessageOrDefault";
 import AdminClientsLoading from "./loading";
+import ClientViewModal from "../../../../components/ClientViewModal";
+import ClientEditModal from "../../../../components/ClientEditModal";
+import ClientCreateModal from "../../../../components/ClientCreateModal";
 
 export default function AdminClients() {
 
@@ -16,7 +19,10 @@ export default function AdminClients() {
     const [itemsCount, setItemsCount] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
     const [loading, setLoading] = useState(true)
-    const [modalOpen, setModalOpen] = useState(false)
+    const [viewModalOpen, setViewModalOpen] = useState(false)
+    const [editModalOpen, setEditModalOpen] = useState(false)
+    const [createModalOpen, setCreateModalOpen] = useState(false)
+    const [selectedClient, setSelectedClient] = useState<IListClientResponseItem | undefined>()
 
     async function fetchEvents() {
         setLoading(true)
@@ -45,6 +51,26 @@ export default function AdminClients() {
         }
     }
 
+    function handleModalOpen(type: "view" | "edit" | "create", client?: IListClientResponseItem) {
+        setSelectedClient(client)
+
+        if (type === "view") {
+            setViewModalOpen(true)
+            setEditModalOpen(false)
+            setCreateModalOpen(false)
+        }
+        else if (type === "edit") {
+            setViewModalOpen(false)
+            setEditModalOpen(true)
+            setCreateModalOpen(false)
+        }
+        else if (type === "create") {
+            setViewModalOpen(false)
+            setEditModalOpen(false)
+            setCreateModalOpen(true)
+        }
+    }
+
     useEffect(() => {
         fetchEvents()
     }, [])
@@ -70,17 +96,39 @@ export default function AdminClients() {
                     <AdminClientsLoading />
                     :
                     clients.map(client => (
-                        <Grid item xs={2} md={3} key={client.id}>
-                            <ClientCard client={client} />
+                        <Grid
+                            key={client.id}
+                            md={3}
+                            item
+                            xs={2}
+                        >
+                            <ClientCard
+                                client={client}
+                                onClick={() => handleModalOpen("view", client)}
+                            />
                         </Grid>
                     ))
                 }
             </Grid>
             <Tooltip title="Adicionar cliente" placement="left" arrow>
-                <Fab className="fixed bottom-8 right-8" onClick={() => setModalOpen(true)}>
+                <Fab className="fixed bottom-8 right-8" onClick={() => handleModalOpen("create")}>
                     <AddOutlined />
                 </Fab>
             </Tooltip>
+            <ClientViewModal
+                open={viewModalOpen}
+                onClose={() => setViewModalOpen(false)}
+                client={clients[0]}
+            />
+            <ClientEditModal
+                open={editModalOpen}
+                onClose={() => setEditModalOpen(false)}
+                client={clients[0]}
+            />
+            <ClientCreateModal
+                open={createModalOpen}
+                onClose={() => setCreateModalOpen(false)}
+            />
         </div>
     )
 }

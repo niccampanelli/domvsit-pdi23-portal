@@ -3,14 +3,17 @@ import { IClientCardProps } from "../../types/components/ClientCard";
 import getColorFromString from "../../util/getColorFromString";
 
 export default function ClientCard({
-    client
+    client,
+    onClick = () => { }
 }: IClientCardProps) {
 
     return (
         <Card
             variant="outlined"
         >
-            <CardActionArea>
+            <CardActionArea
+                onClick={onClick}
+            >
                 <CardHeader
                     avatar={
                         <Avatar

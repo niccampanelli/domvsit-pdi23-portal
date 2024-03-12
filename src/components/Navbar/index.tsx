@@ -2,6 +2,11 @@ import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled } fr
 import { useNavigationContext } from "../../context/Navigation"
 import { useNavigate } from "react-router-dom"
 
+const StyledSection = styled("section")(({ theme }) => ({
+    backgroundColor: theme.palette.background.default,
+    borderRight: `1px solid ${theme.palette.divider}`,
+}))
+
 const NavigationButton = styled(ListItemButton)(({ theme }) => ({
     "&.Mui-selected": {
         backgroundColor: theme.palette.primary.main,
@@ -22,7 +27,7 @@ export default function Navbar() {
     const navigate = useNavigate()
 
     return (
-        <section
+        <StyledSection
             className="flex flex-col h-full w-72 p-4"
         >
             <h1>
@@ -33,7 +38,10 @@ export default function Navbar() {
                     className="flex flex-col gap-2"
                 >
                     {navigationItems.map(item => (
-                        <ListItem disablePadding>
+                        <ListItem
+                            key={item.label}
+                            disablePadding
+                        >
                             <NavigationButton
                                 className="rounded-lg"
                                 selected={item.active}
@@ -50,6 +58,6 @@ export default function Navbar() {
                     ))}
                 </List>
             </nav>
-        </section>
+        </StyledSection>
     )
 }

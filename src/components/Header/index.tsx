@@ -1,8 +1,16 @@
 import { ExitToAppOutlined, Person2Outlined } from "@mui/icons-material"
-import { Avatar, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip, Typography } from "@mui/material"
+import { Avatar, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip, Typography, styled } from "@mui/material"
 import { useAuthContext } from "../../context/Auth"
 import { useState } from "react"
 import { useNavigationContext } from "../../context/Navigation"
+
+const StyledHeader = styled("header")(({ theme }) => ({
+    backgroundColor: theme.palette.background.paper,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    position: "sticky",
+    top: 0,
+    zIndex: theme.zIndex.appBar,
+}))
 
 export default function Header() {
 
@@ -21,8 +29,8 @@ export default function Header() {
     }
 
     return (
-        <header
-            className="flex justify-between items-center p-4 border-b-2 border-black border-b-solid"
+        <StyledHeader
+            className="flex justify-between items-center p-4"
         >
             <Typography
                 variant="h1"
@@ -79,6 +87,6 @@ export default function Header() {
                     />
                 </MenuItem>
             </Menu>
-        </header>
+        </StyledHeader>
     )
 }

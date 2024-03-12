@@ -1,7 +1,7 @@
 import { Grid } from "@mui/material";
-import ClientCardLoading from "../../../../components/ClientCard/loading";
+import EventCardLoading from "../../../../components/EventCard/loading";
 
-export default function AdminClientsLoading() {
+export default function AdminEventsLoading() {
 
     return (
         <>
@@ -10,58 +10,57 @@ export default function AdminClientsLoading() {
                 xs={2}
                 md={3}
             >
-                <ClientCardLoading />
+                <EventCardLoading />
             </Grid>
             <Grid
                 item
                 xs={2}
                 md={3}
             >
-                <ClientCardLoading />
+                <EventCardLoading />
             </Grid>
             <Grid
                 item
                 xs={2}
                 md={3}
             >
-                <ClientCardLoading />
+                <EventCardLoading />
             </Grid>
             <Grid
                 item
                 xs={2}
                 md={3}
             >
-                <ClientCardLoading />
+                <EventCardLoading />
             </Grid>
             <Grid
                 item
                 xs={2}
                 md={3}
             >
-                <ClientCardLoading />
+                <EventCardLoading />
             </Grid>
             <Grid
                 item
                 xs={2}
                 md={3}
             >
-                <ClientCardLoading />
+                <EventCardLoading />
             </Grid>
             <Grid
                 item
                 xs={2}
                 md={3}
             >
-                <ClientCardLoading />
+                <EventCardLoading />
             </Grid>
             <Grid
                 item
                 xs={2}
                 md={3}
             >
-                <ClientCardLoading />
+                <EventCardLoading />
             </Grid>
         </>
     )
-
 }

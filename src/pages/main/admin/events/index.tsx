@@ -1,20 +1,22 @@
 import { AddOutlined } from "@mui/icons-material";
-import { Fab, Grid, Tooltip, Typography } from "@mui/material";
+import { Fab, Grid, Skeleton, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import EventCard from "../../../../components/EventCard";
-import EventCardLoading from "../../../../components/EventCard/loading";
+import EventEditModal from "../../../../components/EventEditModal";
+import EventViewModal from "../../../../components/EventViewModal";
 import { useToastsContext } from "../../../../context/Toasts";
 import eventService from "../../../../services/eventService";
 import { IListResponseItem } from "../../../../types/services/eventService";
 import { getErrorMessageOrDefault } from "../../../../util/getErrorMessageOrDefault";
-import EventViewModal from "../../../../components/EventViewModal";
-import EventEditModal from "../../../../components/EventEditModal";
+import AdminEventsLoading from "./loading";
 
 export default function AdminEvents() {
 
     const { addToast } = useToastsContext()
 
     const [events, setEvents] = useState<IListResponseItem[]>([])
+    const [itemsCount, setItemsCount] = useState(0);
+    const [totalItems, setTotalItems] = useState(0);
     const [loading, setLoading] = useState(true)
     const [viewModalOpen, setViewModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
@@ -30,6 +32,8 @@ export default function AdminEvents() {
             })
 
             setEvents(data.data)
+            setItemsCount(data.itemsCount)
+            setTotalItems(data.total)
         }
         catch (error) {
             const message = getErrorMessageOrDefault(error)
@@ -73,90 +77,38 @@ export default function AdminEvents() {
         <div className="flex flex-1 flex-col gap-8 p-4">
             <div className="flex justify-between items-center">
                 <Typography
-                    variant="h2"
-                    className="text-xl font-bold"
-                >
-                    Mostrando 3 eventos de 234
-                </Typography>
-            </div><Grid>
-                <Grid
-                    container
-                    spacing={2}
+                    variant="caption"
                 >
                     {loading ?
-                        <>
-                            <Grid
-                                item
-                                xs={2}
-                                md={3}
-                            >
-                                <EventCardLoading />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={2}
-                                md={3}
-                            >
-                                <EventCardLoading />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={2}
-                                md={3}
-                            >
-                                <EventCardLoading />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={2}
-                                md={3}
-                            >
-                                <EventCardLoading />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={2}
-                                md={3}
-                            >
-                                <EventCardLoading />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={2}
-                                md={3}
-                            >
-                                <EventCardLoading />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={2}
-                                md={3}
-                            >
-                                <EventCardLoading />
-                            </Grid>
-                            <Grid
-                                item
-                                xs={2}
-                                md={3}
-                            >
-                                <EventCardLoading />
-                            </Grid>
-                        </>
+                        <Skeleton
+                            variant="text"
+                            width={180}
+                        />
                         :
-                        events.map(event => (
-                            <Grid
-                                item
-                                xs={3}
-                                key={event.id}
-                            >
-                                <EventCard
-                                    event={event}
-                                    onClick={() => handleViewModalOpen(event)}
-                                />
-                            </Grid>
-                        ))
+                        `Mostrando ${itemsCount} ${itemsCount === 1 ? "evento" : "eventos"} de ${totalItems}`
                     }
-                </Grid>
+                </Typography>
+            </div>
+            <Grid
+                container
+                spacing={2}
+            >
+                {loading ?
+                    <AdminEventsLoading />
+                    :
+                    events.map(event => (
+                        <Grid
+                            item
+                            xs={3}
+                            key={event.id}
+                        >
+                            <EventCard
+                                event={event}
+                                onClick={() => handleViewModalOpen(event)}
+                            />
+                        </Grid>
+                    ))
+                }
             </Grid>
             <Tooltip
                 title="Adicionar evento"

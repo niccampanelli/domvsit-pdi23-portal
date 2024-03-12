@@ -7,7 +7,9 @@ export default function ClientCard({
 }: IClientCardProps) {
 
     return (
-        <Card>
+        <Card
+            variant="outlined"
+        >
             <CardActionArea>
                 <CardHeader
                     avatar={

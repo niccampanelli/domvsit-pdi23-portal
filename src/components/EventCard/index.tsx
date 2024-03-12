@@ -18,7 +18,9 @@ export default function EventCard({
     }
 
     return (
-        <StyledCard>
+        <StyledCard
+            variant="outlined"
+        >
             <CardActionArea
                 onClick={onClick}
             >

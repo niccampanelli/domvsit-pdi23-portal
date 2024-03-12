@@ -1,10 +1,10 @@
-import { CalendarMonthOutlined, DashboardOutlined, FaceOutlined } from "@mui/icons-material"
+import { CalendarMonthOutlined, FaceOutlined, SpaceDashboardOutlined } from "@mui/icons-material"
 import { NavigationItemsType } from "../types/context/Navigation"
 
 export const navigationRoutes: NavigationItemsType = {
     "admin": [
         {
-            icon: <DashboardOutlined />,
+            icon: <SpaceDashboardOutlined />,
             label: "Dashboard",
             path: "/admin",
         },

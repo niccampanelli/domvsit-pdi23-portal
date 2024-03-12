@@ -45,6 +45,26 @@ export default function AdminEvents() {
         }
     }
 
+    function handleViewModalOpen(event: IListResponseItem) {
+        setSelectedEvent(event)
+        setViewModalOpen(true)
+    }
+
+    function handleEditModalOpen(event?: IListResponseItem) {
+        setSelectedEvent(event)
+        setEditModalOpen(true)
+    }
+
+    function handleEditModalClose() {
+        setSelectedEvent(undefined)
+        setEditModalOpen(false)
+    }
+
+    function handleViewModalClose() {
+        setSelectedEvent(undefined)
+        setViewModalOpen(false)
+    }
+
     useEffect(() => {
         fetchEvents()
     }, [])
@@ -131,10 +151,7 @@ export default function AdminEvents() {
                             >
                                 <EventCard
                                     event={event}
-                                    onClick={() => {
-                                        setSelectedEvent(event)
-                                        setEditModalOpen(true)
-                                    }}
+                                    onClick={() => handleViewModalOpen(event)}
                                 />
                             </Grid>
                         ))
@@ -148,23 +165,22 @@ export default function AdminEvents() {
             >
                 <Fab
                     className="fixed bottom-8 right-8"
-                    onClick={() => {
-                        setSelectedEvent(undefined)
-                        setEditModalOpen(true)
-                    }}
+                    onClick={() => handleEditModalOpen(undefined)}
                 >
                     <AddOutlined />
                 </Fab>
             </Tooltip>
             <EventViewModal
                 open={viewModalOpen}
-                onClose={() => setViewModalOpen(false)}
+                onClose={() => handleViewModalClose()}
                 event={selectedEvent}
+                openEditModal={event => handleEditModalOpen(event)}
             />
             <EventEditModal
                 open={editModalOpen}
-                onClose={() => setEditModalOpen(false)}
+                onClose={() => handleEditModalClose()}
                 event={selectedEvent}
+                openViewModal={event => handleViewModalOpen(event)}
             />
         </div>
     )

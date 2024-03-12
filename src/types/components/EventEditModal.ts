@@ -4,6 +4,7 @@ export interface IEventEditModalProps {
     open: boolean
     onClose: () => void
     event?: IListResponseItem
+    openViewModal?: (event: IListResponseItem) => void
 }
 
 export interface IEventEditModalFormValuesClient {

@@ -1,19 +1,20 @@
-import { LinkOutlined } from "@mui/icons-material";
-import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Skeleton, Tooltip, Typography } from "@mui/material";
-import getColorFromString from "../../util/getColorFromString";
+import { EditOutlined, LinkOutlined } from "@mui/icons-material";
+import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Fab, Skeleton, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
-import getInitials from "../../util/getInitials";
+import { useEffect, useState } from "react";
+import { useToastsContext } from "../../context/Toasts";
+import clientService from "../../services/clientService";
 import { IEventViewModalProps } from "../../types/components/EventViewModal";
 import { IGetAttendantByIdResponse, IGetClientByIdResponse } from "../../types/services/clientService";
-import { useToastsContext } from "../../context/Toasts";
+import getColorFromString from "../../util/getColorFromString";
 import { getErrorMessageOrDefault } from "../../util/getErrorMessageOrDefault";
-import { useEffect, useState } from "react";
-import clientService from "../../services/clientService";
+import getInitials from "../../util/getInitials";
 
 export default function EventViewModal({
     open,
     onClose,
-    event
+    event,
+    openEditModal
 }: IEventViewModalProps) {
 
     const { addToast } = useToastsContext()
@@ -68,6 +69,11 @@ export default function EventViewModal({
         finally {
             setAttendantsLoading(false)
         }
+    }
+
+    function handleOpenEditModal() {
+        onClose()
+        openEditModal!(event)
     }
 
     useEffect(() => {
@@ -235,6 +241,20 @@ export default function EventViewModal({
                     </div>
                 </div>
             </DialogContent>
+            {openEditModal &&
+                <Tooltip
+                    title="Editar evento"
+                    placement="left"
+                    arrow
+                >
+                    <Fab
+                        className="fixed bottom-8 right-8"
+                        onClick={handleOpenEditModal}
+                    >
+                        <EditOutlined />
+                    </Fab>
+                </Tooltip>
+            }
         </Dialog>
     )
 }

@@ -1,7 +1,7 @@
 import { IPaginatedResponse, IPaginationRequest, ISortingRequest } from "./services"
 
-interface IEventAttendantRequest {
-    clientId: number
+interface INewEventAttendantRequest {
+    attendantId: number
 }
 
 export interface INewRequest {
@@ -11,7 +11,7 @@ export interface INewRequest {
     link?: string
     ocurrence: Date
     clientId: number
-    eventAttendants: IEventAttendantRequest[]
+    eventAttendants: INewEventAttendantRequest[]
 }
 
 export interface INewResponse {
@@ -44,3 +44,22 @@ export interface IListResponseItem {
 }
 
 export type ListResponseType = IPaginatedResponse<IListResponseItem>
+
+interface IUpdateEventAttendantRequest {
+    attendantId?: number
+}
+
+export interface IUpdateRequest {
+    id: number
+    title?: string
+    description?: string
+    tags?: string[]
+    link?: string
+    ocurrence?: Date
+    clientId?: number
+    status?: boolean
+    eventAttendants?: IUpdateEventAttendantRequest[]
+}
+
+export interface IUpdateResponse {
+}

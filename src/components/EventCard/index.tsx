@@ -2,6 +2,7 @@ import { LinkOutlined } from "@mui/icons-material"
 import { Card, CardActionArea, CardContent, Chip, Typography, styled } from "@mui/material"
 import moment from "moment"
 import { IEventCardProps } from "../../types/components/EventCard"
+import getTruncatedText from "../../util/getTruncatedText"
 
 const StyledCard = styled(Card)(({ theme }) => ({
     borderTop: `8px solid ${theme.palette.primary.main}`
@@ -14,13 +15,6 @@ export default function EventCard({
 
     function getFormattedOcurrence(ocurrence: Date) {
         return moment(ocurrence).format("ddd, DD [de] MMM")
-    }
-
-    function getTruncatedDescription(description: string) {
-        if (description.length > 40) {
-            return description.slice(0, 60) + "..."
-        }
-        return description
     }
 
     return (
@@ -50,7 +44,7 @@ export default function EventCard({
                         {event.title}
                     </Typography>
                     <Typography>
-                        {getTruncatedDescription(event.description)}
+                        {getTruncatedText(event.description, 60)}
                     </Typography>
                     {event.tags &&
                         <div className="flex flex-row flex-wrap gap-2 mt-4">

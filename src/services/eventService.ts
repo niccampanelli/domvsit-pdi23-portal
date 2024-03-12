@@ -1,4 +1,4 @@
-import { IListRequest, INewRequest, INewResponse, ListResponseType } from "../types/services/eventService"
+import { IListRequest, INewRequest, INewResponse, IUpdateRequest, IUpdateResponse, ListResponseType } from "../types/services/eventService"
 import API from "./api"
 
 async function newEvent(request: INewRequest): Promise<INewResponse> {
@@ -15,7 +15,18 @@ async function list(request?: IListRequest): Promise<ListResponseType> {
     return data
 }
 
+async function update(request: IUpdateRequest): Promise<IUpdateResponse> {
+    const { data } = await API.eventApi.put<IUpdateResponse>(`event/update/${request.id}`, {
+        ...request,
+        id: undefined,
+        status: true
+    })
+
+    return data
+}
+
 export default {
     newEvent,
-    list
+    list,
+    update
 }

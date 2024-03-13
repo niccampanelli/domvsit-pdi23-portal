@@ -1,5 +1,5 @@
 import { Grid } from "@mui/material";
-import EventCardLoading from "../../../../components/EventCard/loading";
+import EventCardLoading from "../../../../components/EventCard/Loading";
 
 export default function AdminEventsLoading() {
 

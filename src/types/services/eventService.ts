@@ -18,9 +18,14 @@ export interface INewResponse {
     createdId: number
 }
 
-export interface IListRequest extends IPaginationRequest, ISortingRequest<"title" | "ocurrence" | "createdAt" | "updatedAt"> {
+export type ListRequestSortFieldsType = "title" | "ocurrence" | "createdAt" | "updatedAt"
+
+export interface IListRequest extends IPaginationRequest, ISortingRequest<ListRequestSortFieldsType> {
     consultorId?: number
     clientId?: number
+    ocurrenceMin?: Date
+    ocurrenceMax?: Date
+    search?: string
 }
 
 interface IEventAttendant {

@@ -1,5 +1,24 @@
 import { IPaginatedResponse, IPaginationRequest, ISortingRequest } from "./services"
 
+export interface ICreateClientRequest {
+    name: string
+    email: string
+    phone: string
+}
+
+export interface ICreateClientAttendantTokenResponse {
+    id: number
+    value: string
+    createdAt: Date
+    expiresAt: Date
+}
+
+export interface ICreateClientResponse {
+    createdId: number
+    createdAttendantId: number
+    attendantToken: ICreateClientAttendantTokenResponse
+}
+
 export interface IIdentifyRequest {
     email: string
     attendantToken: string
@@ -43,7 +62,9 @@ export interface IListAttendantResponseItem {
 
 export type ListAttendantResponseType = IPaginatedResponse<IListAttendantResponseItem>
 
-export interface IListClientRequest extends IPaginationRequest, ISortingRequest<"name" | "email" | "phone" | "createdAt"> {
+export type ListClientRequestSortFieldsType = "name" | "email" | "phone" | "createdAt"
+
+export interface IListClientRequest extends IPaginationRequest, ISortingRequest<ListClientRequestSortFieldsType> {
     consultorId?: number
     search?: string
 }

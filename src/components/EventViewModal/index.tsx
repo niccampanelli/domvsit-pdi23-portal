@@ -1,5 +1,5 @@
 import { EditOutlined, LinkOutlined } from "@mui/icons-material";
-import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Fab, Skeleton, Tooltip, Typography, styled } from "@mui/material";
+import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Fab, Skeleton, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useToastsContext } from "../../context/Toasts";
@@ -9,7 +9,7 @@ import { IGetAttendantByIdResponse, IGetClientByIdResponse } from "../../types/s
 import getColorFromString from "../../util/getColorFromString";
 import { getErrorMessageOrDefault } from "../../util/getErrorMessageOrDefault";
 import getInitials from "../../util/getInitials";
-import EventViewModalAttendantsLoading from "./attendantsLoading";
+import EventViewModalAttendantsLoading from "./AttendantsLoading";
 
 export default function EventViewModal({
     open,

@@ -1,5 +1,11 @@
-import { IGetAttendantByIdResponse, IGetClientByIdResponse, IIdentifyRequest, IIdentifyResponse, IJoinRequest, IJoinResponse, IListAttendantRequest, IListClientRequest, ListAttendantResponseType, ListClientResponseType } from "../types/services/clientService"
+import { ICreateClientRequest, ICreateClientResponse, IGetAttendantByIdResponse, IGetClientByIdResponse, IIdentifyRequest, IIdentifyResponse, IJoinRequest, IJoinResponse, IListAttendantRequest, IListClientRequest, ListAttendantResponseType, ListClientResponseType } from "../types/services/clientService"
 import API from "./api"
+
+async function createClient(request: ICreateClientRequest): Promise<ICreateClientResponse> {
+    const { data } = await API.clientApi.post<ICreateClientResponse>("client/create", request)
+
+    return data
+}
 
 async function authenticate(request: IIdentifyRequest): Promise<IIdentifyResponse> {
     const { data } = await API.clientApi.post<IIdentifyResponse>("attendant/authenticate", request)
@@ -40,6 +46,7 @@ async function getClientById(id: number): Promise<IGetClientByIdResponse> {
 }
 
 export default {
+    createClient,
     authenticate,
     join,
     listAttendant,

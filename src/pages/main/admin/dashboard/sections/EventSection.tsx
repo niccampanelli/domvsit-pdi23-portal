@@ -1,7 +1,7 @@
 import { Grid, Typography } from "@mui/material"
 import { useEffect, useState } from "react"
 import EventCard from "../../../../../components/EventCard"
-import EventCardLoading from "../../../../../components/EventCard/loading"
+import EventCardLoading from "../../../../../components/EventCard/Loading"
 import { useToastsContext } from "../../../../../context/Toasts"
 import eventService from "../../../../../services/eventService"
 import { IListResponseItem } from "../../../../../types/services/eventService"

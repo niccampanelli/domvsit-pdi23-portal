@@ -1,6 +1,8 @@
 import { Avatar, Card, CardActionArea, CardHeader, Typography } from "@mui/material";
 import { IClientCardProps } from "../../types/components/ClientCard";
 import getColorFromString from "../../util/getColorFromString";
+import getInitials from "../../util/getInitials";
+import getTruncatedText from "../../util/getTruncatedText";
 
 export default function ClientCard({
     client,
@@ -22,7 +24,7 @@ export default function ClientCard({
                                 bgcolor: getColorFromString(client.name)
                             }}
                         >
-                            {client.name[0]}
+                            {getInitials(client.name)}
                         </Avatar>
                     }
                     title={
@@ -30,14 +32,14 @@ export default function ClientCard({
                             variant="h3"
                             className="font-bold text-base"
                         >
-                            {client.name}
+                            {getTruncatedText(client.name, 16)}
                         </Typography>
                     }
                     subheader={
                         <Typography
                             className="text-xs"
                         >
-                            {client.email}
+                            {getTruncatedText(client.email, 22)}
                         </Typography>
                     }
                 />

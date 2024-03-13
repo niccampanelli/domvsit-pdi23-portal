@@ -24,7 +24,8 @@ const schema: yup.ObjectSchema<IClientEditModalFormValues> = yup.object().shape(
 export default function ClientEditModal({
     open,
     onClose,
-    client
+    client,
+    actionButton
 }: IClientEditModalProps) {
 
     const { addToast } = useToastsContext()
@@ -177,6 +178,9 @@ export default function ClientEditModal({
                     Salvar
                 </Button>
             </DialogActions>
+            <div className="fixed bottom-8 right-8">
+                {actionButton}
+            </div>
         </Dialog>
     )
 }

@@ -7,7 +7,8 @@ import getInitials from "../../util/getInitials";
 export default function ClientViewModal({
     open,
     onClose,
-    client
+    client,
+    actionButton
 }: IClientViewModalProps) {
 
     return (
@@ -18,7 +19,8 @@ export default function ClientViewModal({
                 <Avatar
                     alt={client?.name}
                     sx={{
-                        bgcolor: getColorFromString(client?.name || "")
+                        bgcolor: getColorFromString(client?.name || ""),
+                        fontWeight: 400
                     }}
                 >
                     {getInitials(client?.name || "")}
@@ -48,6 +50,9 @@ export default function ClientViewModal({
                     {moment(client?.createdAt).format("[Criado em] DD/MM/YYYY [às] HH:mm")}
                 </Typography>
             </DialogContent>
+            <div className="fixed bottom-8 right-8">
+                {actionButton}
+            </div>
         </Dialog>
     )
 }

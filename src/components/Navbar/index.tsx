@@ -28,7 +28,7 @@ export default function Navbar() {
 
     return (
         <StyledSection
-            className="flex flex-col h-full w-72 p-4"
+            className="flex flex-col h-full w-64 p-4"
         >
             <h1>
                 Planify

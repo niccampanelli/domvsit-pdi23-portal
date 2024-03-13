@@ -9,7 +9,7 @@ const StyledHeader = styled("header")(({ theme }) => ({
     borderBottom: `1px solid ${theme.palette.divider}`,
     position: "sticky",
     top: 0,
-    zIndex: theme.zIndex.appBar,
+    zIndex: 10,
 }))
 
 export default function Header() {

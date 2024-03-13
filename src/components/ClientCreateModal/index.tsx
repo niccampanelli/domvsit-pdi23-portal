@@ -1,12 +1,15 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EmailOutlined, NotesOutlined, PhoneOutlined } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
-import { useState } from "react";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useToastsContext } from "../../context/Toasts";
 import { IClientCreateModalFormValues, IClientCreateModalProps } from "../../types/components/ClientCreateModal";
 import { getErrorMessageOrDefault } from "../../util/getErrorMessageOrDefault";
+import clientService from "../../services/clientService";
+import ClientCreateModalCreated from "./Created";
+import { ICreateClientAttendantTokenResponse } from "../../types/services/clientService";
 
 const schema: yup.ObjectSchema<IClientCreateModalFormValues> = yup.object().shape({
     name: yup
@@ -23,7 +26,8 @@ const schema: yup.ObjectSchema<IClientCreateModalFormValues> = yup.object().shap
 
 export default function ClientCreateModal({
     open,
-    onClose
+    onClose,
+    refreshData
 }: IClientCreateModalProps) {
 
     const { addToast } = useToastsContext()
@@ -48,13 +52,36 @@ export default function ClientCreateModal({
         resolver: yupResolver(schema)
     })
 
+    const [createdModalOpen, setCreatedModalOpen] = useState(false)
+    const [createdName, setCreatedName] = useState("")
+    const [createdAttendantToken, setCreatedAttendantToken] = useState<ICreateClientAttendantTokenResponse | undefined>()
     const [loading, setLoading] = useState(false)
 
     async function handleCreate(values: IClientCreateModalFormValues) {
         setLoading(true)
 
         try {
-            // const data 
+            const data = await clientService.createClient({
+                name: values.name,
+                email: values.email,
+                phone: values.phone
+            })
+
+            if (!data.createdId || !data.createdAttendantId || !data.attendantToken) {
+                throw new Error("Erro ao criar o cliente")
+            }
+
+            addToast({
+                title: "Cliente criado com sucesso",
+                message: "O cliente foi criado com sucesso",
+                type: "success"
+            })
+
+            setCreatedName(values.name)
+            setCreatedAttendantToken(data.attendantToken)
+            setCreatedModalOpen(true)
+
+            refreshData()
         }
         catch (error) {
             const message = getErrorMessageOrDefault(error)
@@ -69,6 +96,12 @@ export default function ClientCreateModal({
             setLoading(false)
         }
     }
+
+    useEffect(() => {
+        if (open) {
+            reset(defaultValues)
+        }
+    }, [open])
 
     return (
         <Dialog
@@ -160,9 +193,24 @@ export default function ClientCreateModal({
                     type="submit"
                     disabled={!isDirty || !isValid || loading}
                 >
-                    Criar
+                    {loading ?
+                        <CircularProgress size={24} color="inherit" />
+                        :
+                        "Criar"
+                    }
                 </Button>
             </DialogActions>
+            <ClientCreateModalCreated
+                open={createdModalOpen}
+                onClose={() => {
+                    setCreatedModalOpen(false)
+                    setCreatedName("")
+                    setCreatedAttendantToken(undefined)
+                    onClose()
+                }}
+                name={createdName}
+                attendantToken={createdAttendantToken}
+            />
         </Dialog>
     )
 }

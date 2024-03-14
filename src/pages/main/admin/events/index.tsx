@@ -1,15 +1,17 @@
-import { AddOutlined, ArrowDownwardOutlined, ArrowRightAltOutlined, ArrowUpwardOutlined, SearchOutlined } from "@mui/icons-material";
-import { Fab, Grid, IconButton, InputAdornment, MenuItem, Skeleton, TextField, Tooltip, Typography } from "@mui/material";
+import { AddOutlined, ArrowDownwardOutlined, ArrowUpwardOutlined, FaceOutlined, SearchOutlined } from "@mui/icons-material";
+import { Autocomplete, Fab, Grid, IconButton, InputAdornment, MenuItem, Skeleton, TextField, Tooltip, Typography } from "@mui/material";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import EventCard from "../../../../components/EventCard";
 import EventEditModal from "../../../../components/EventEditModal";
 import EventViewModal from "../../../../components/EventViewModal";
 import { useToastsContext } from "../../../../context/Toasts";
+import clientService from "../../../../services/clientService";
 import eventService from "../../../../services/eventService";
+import { IListClientResponseItem } from "../../../../types/services/clientService";
 import { IListResponseItem, ListRequestSortFieldsType } from "../../../../types/services/eventService";
 import { getErrorMessageOrDefault } from "../../../../util/getErrorMessageOrDefault";
 import AdminEventsLoading from "./Loading";
-import moment from "moment";
 
 export default function AdminEvents() {
 
@@ -23,6 +25,9 @@ export default function AdminEvents() {
     ]
 
     const [search, setSearch] = useState("")
+    const [searchClient, setSearchClient] = useState("")
+    const [clients, setClients] = useState<IListClientResponseItem[]>([])
+    const [selectedClient, setSelectedClient] = useState<IListClientResponseItem | null>(null)
     const [ocurrenceMin, setOcurrenceMin] = useState<Date>(moment().subtract(1, "month").toDate())
     const [ocurrenceMax, setOcurrenceMax] = useState<Date>(moment().add(1, "month").toDate())
     const [sortField, setSortField] = useState<ListRequestSortFieldsType>("createdAt")
@@ -31,9 +36,36 @@ export default function AdminEvents() {
     const [itemsCount, setItemsCount] = useState(0);
     const [totalItems, setTotalItems] = useState(0);
     const [loading, setLoading] = useState(true)
+    const [clientsLoading, setClientsLoading] = useState(true)
     const [viewModalOpen, setViewModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [selectedEvent, setSelectedEvent] = useState<IListResponseItem | undefined>(undefined)
+
+    async function fetchClients() {
+        setClientsLoading(true)
+
+        try {
+            const data = await clientService.listClient({
+                search: searchClient,
+                page: 1,
+                limit: 10
+            })
+
+            setClients(data.data)
+        }
+        catch (error) {
+            const message = getErrorMessageOrDefault(error)
+
+            addToast({
+                title: "Erro ao buscar os clientes",
+                message,
+                type: "error"
+            })
+        }
+        finally {
+            setClientsLoading(false)
+        }
+    }
 
     async function fetchEvents() {
         setLoading(true)
@@ -46,7 +78,8 @@ export default function AdminEvents() {
                 sortOrder,
                 search,
                 ocurrenceMin,
-                ocurrenceMax
+                ocurrenceMax,
+                clientId: selectedClient?.id
             })
 
             setEvents(data.data)
@@ -92,8 +125,12 @@ export default function AdminEvents() {
     }
 
     useEffect(() => {
+        fetchClients()
+    }, [searchClient])
+
+    useEffect(() => {
         fetchEvents()
-    }, [search, sortField, sortOrder, ocurrenceMin, ocurrenceMax])
+    }, [search, sortField, sortOrder, selectedClient?.id, ocurrenceMin, ocurrenceMax])
 
     return (
         <div className="flex flex-1 flex-col p-4">
@@ -106,12 +143,53 @@ export default function AdminEvents() {
                         className="flex-1"
                         size="small"
                         InputProps={{
+                            sx: {
+                                paddingLeft: 1
+                            },
                             startAdornment: (
                                 <InputAdornment position="start">
                                     <SearchOutlined fontSize="small" />
                                 </InputAdornment>
                             )
                         }}
+                    />
+                    <Autocomplete
+                        autoComplete
+                        value={selectedClient}
+                        onChange={(_, value) => setSelectedClient(value)}
+                        onInputChange={(_, value) => setSearchClient(value)}
+                        options={clients}
+                        isOptionEqualToValue={(option, value) => option.id === value.id}
+                        getOptionLabel={(option) => option.name}
+                        filterOptions={(x) => x}
+                        noOptionsText="Nenhum cliente encontrado"
+                        size="small"
+                        loading={clientsLoading}
+                        loadingText="Carregando..."
+                        sx={{
+                            minWidth: 180
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                placeholder="Cliente"
+                                size="small"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    fullWidth: true,
+                                    startAdornment: (
+                                        <InputAdornment position="start">
+                                            <FaceOutlined />
+                                        </InputAdornment>
+                                    )
+                                }}
+                            />
+                        )}
+                        renderOption={(props, option) => (
+                            <li {...props}>
+                                {option.name}
+                            </li>
+                        )}
                     />
                     <TextField
                         label="Desde"
@@ -123,7 +201,6 @@ export default function AdminEvents() {
                         onChange={e => setOcurrenceMin(moment(e.target.value).toDate())}
                         size="small"
                     />
-                    <ArrowRightAltOutlined />
                     <TextField
                         label="Até"
                         type="date"

@@ -102,6 +102,9 @@ export default function AdminClients() {
                     className="flex-1"
                     size="small"
                     InputProps={{
+                        sx: {
+                            paddingLeft: 1
+                        },
                         startAdornment: (
                             <InputAdornment position="start">
                                 <SearchOutlined fontSize="small" />

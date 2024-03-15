@@ -39,14 +39,14 @@ export default function ClientCreateModalCreated({
             </DialogTitle>
             <DialogContent>
                 <Typography>
-                    Compartilhe o token abaixo para que os participantes possam se juntar ao cliente:
+                    Compartilhe o código abaixo para que os participantes possam se juntar ao cliente:
                 </Typography>
                 <Typography
                     className="font-bold text-2xl my-4"
                 >
                     {attendantToken?.value}
                     <Tooltip
-                        title={tokenCopied ? "Copiado!" : "Copiar token"}
+                        title={tokenCopied ? "Copiado!" : "Copiar código"}
                         arrow
                     >
                         <IconButton
@@ -60,7 +60,7 @@ export default function ClientCreateModalCreated({
                 <Typography
                     variant="caption"
                 >
-                    Esse token irá expirar em {moment(attendantToken?.expiresAt).format("DD/MM/YYYY [ás] HH:mm")}
+                    Esse código irá expirar em {moment(attendantToken?.expiresAt).format("DD/MM/YYYY [às] HH:mm")}
                 </Typography>
             </DialogContent>
         </Dialog>

@@ -97,3 +97,11 @@ export interface IGetClientByIdResponse {
     consultorId: number
     createdAt: Date
 }
+
+export interface IGetAttendantTokenResponse {
+    id: number
+    value: string
+    createdAt: Date
+    expiresAt: Date
+    expiredAt?: Date
+}

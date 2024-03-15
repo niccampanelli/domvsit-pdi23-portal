@@ -1,4 +1,4 @@
-import { ICreateClientRequest, ICreateClientResponse, IGetAttendantByIdResponse, IGetClientByIdResponse, IIdentifyRequest, IIdentifyResponse, IJoinRequest, IJoinResponse, IListAttendantRequest, IListClientRequest, ListAttendantResponseType, ListClientResponseType } from "../types/services/clientService"
+import { ICreateClientRequest, ICreateClientResponse, IGetAttendantByIdResponse, IGetAttendantTokenResponse, IGetClientByIdResponse, IIdentifyRequest, IIdentifyResponse, IJoinRequest, IJoinResponse, IListAttendantRequest, IListClientRequest, ListAttendantResponseType, ListClientResponseType } from "../types/services/clientService"
 import API from "./api"
 
 async function createClient(request: ICreateClientRequest): Promise<ICreateClientResponse> {
@@ -45,6 +45,11 @@ async function getClientById(id: number): Promise<IGetClientByIdResponse> {
     return data
 }
 
+async function getAttendantToken(clientId: number): Promise<IGetAttendantTokenResponse> {
+    const { data } = await API.clientApi.get<IGetAttendantTokenResponse>(`client/${clientId}/getAttendantToken`)
+    return data
+}
+
 export default {
     createClient,
     authenticate,
@@ -52,5 +57,6 @@ export default {
     listAttendant,
     listClient,
     getAttendantById,
-    getClientById
+    getClientById,
+    getAttendantToken
 }

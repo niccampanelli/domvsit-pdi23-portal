@@ -1,17 +1,17 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Button, CircularProgress, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material";
-import { Controller, useForm } from "react-hook-form";
-import * as yup from "yup";
-import { IAdminSignUpFormValues } from "../../../types/pages/auth/admin/SignUp";
-import { useToastsContext } from "../../../context/Toasts";
+import { BadgeOutlined, CodeOutlined, EmailOutlined, Person2Outlined } from "@mui/icons-material";
+import { Button, CircularProgress, InputAdornment, Link, TextField, Typography } from "@mui/material";
 import { useState } from "react";
-import { getErrorMessageOrDefault } from "../../../util/getErrorMessageOrDefault";
-import authService from "../../../services/authService";
-import { EmailOutlined, LockOutlined, Person2Outlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material";
+import { Controller, useForm } from "react-hook-form";
 import { Link as RouterLink, useNavigate } from "react-router-dom";
+import * as yup from "yup";
+import { useToastsContext } from "../../../context/Toasts";
+import { IAttendantJoinFormValues } from "../../../types/pages/auth/attendant/Join";
+import { getErrorMessageOrDefault } from "../../../util/getErrorMessageOrDefault";
+import clientService from "../../../services/clientService";
 import { motion, Variants } from "framer-motion";
 
-const schema: yup.ObjectSchema<IAdminSignUpFormValues> = yup.object({
+const schema: yup.ObjectSchema<IAttendantJoinFormValues> = yup.object({
     name: yup
         .string()
         .required("Insira o seu nome"),
@@ -19,20 +19,12 @@ const schema: yup.ObjectSchema<IAdminSignUpFormValues> = yup.object({
         .string()
         .email("Insira um email válido")
         .required("Insira o seu email"),
-    password: yup
+    role: yup
         .string()
-        .required("Informe uma senha")
-        .min(8, "A senha deve ter no mínimo 8 caracteres")
-        .matches(
-            /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-            "A senha deve conter pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial"
-        )
-        .defined(),
-        confirmPassword: yup
+        .required("Informe o seu cargo"),
+    attendantToken: yup
         .string()
-        .required("Confirme a senha")
-        .oneOf([yup.ref("password")], "A confirmação deve ser igual à senha")
-        .defined(),
+        .required("Informe o código do participante")
 })
 
 const formVariants: Variants = {
@@ -56,13 +48,13 @@ const formVariants: Variants = {
     }
 }
 
-export default function AdminSignUp() {
+export default function AttendantJoin() {
 
-    const defaultValues: IAdminSignUpFormValues = {
+    const defaultValues: IAttendantJoinFormValues = {
         name: "",
         email: "",
-        password: "",
-        confirmPassword: ""
+        role: "",
+        attendantToken: ""
     }
 
     const {
@@ -72,7 +64,7 @@ export default function AdminSignUp() {
             isDirty,
             isValid
         }
-    } = useForm<IAdminSignUpFormValues>({
+    } = useForm<IAttendantJoinFormValues>({
         mode: "all",
         defaultValues,
         resolver: yupResolver(schema)
@@ -81,38 +73,46 @@ export default function AdminSignUp() {
     const { addToast } = useToastsContext()
     const navigate = useNavigate()
 
-    const [passwordVisible, setPasswordVisible] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    async function handleSignUp(values: IAdminSignUpFormValues) {
+    async function handleJoin(values: IAttendantJoinFormValues) {
         setLoading(true)
 
         try {
-            const data = await authService.signUp({
+            const data = await clientService.join({
                 name: values.name,
                 email: values.email,
-                password: values.password
+                role: values.role,
+                attendantToken: values.attendantToken
             })
 
             if (!data.id) {
-                throw new Error("Usuário não cadastrado")
+                throw new Error("Participante não cadastrado")
             }
 
             addToast({
-                title: "Cadastro realizado com sucesso",
-                message: "Seja bem-vindo! Faça login para continuar",
-                type: "success"
+                title: "Participante cadastrado",
+                message: "Você agora faz parte do cliente. Entre como participante para acessar os seus eventos.",
+                type: "success",
             })
 
-            navigate("/auth/login")
+            if (!data.isEmailInDomain) {
+                addToast({
+                    title: "Email fora do domínio",
+                    message: "O email informado não pertence ao domínio do cliente.",
+                    type: "warning",
+                })
+            }
+
+            navigate("/auth/attendant/login")
         }
         catch (error) {
             const message = getErrorMessageOrDefault(error)
 
             addToast({
-                title: "Erro ao realizar o cadastro",
+                title: "Erro ao participar do cliente",
                 message,
-                type: "error"
+                type: "error",
             })
         }
         finally {
@@ -123,7 +123,7 @@ export default function AdminSignUp() {
     return (
         <motion.form
             className="flex flex-1 flex-col w-full max-w-96 gap-4"
-            onSubmit={handleSubmit(handleSignUp)}
+            onSubmit={handleSubmit(handleJoin)}
             variants={formVariants}
             initial="hidden"
             animate="visible"
@@ -133,7 +133,7 @@ export default function AdminSignUp() {
                 variant="h1"
                 className="text-2xl font-semibold"
             >
-                Cadastre-se
+                Participar de um cliente
             </Typography>
             <Controller
                 control={control}
@@ -182,13 +182,12 @@ export default function AdminSignUp() {
             />
             <Controller
                 control={control}
-                name="password"
+                name="role"
                 render={({ field, fieldState: { error } }) => (
                     <TextField
                         {...field}
-                        placeholder="Crie uma senha"
-                        type={passwordVisible ? "text" : "password"}
-                        autoComplete="new-password"
+                        placeholder="Informe o seu cargo"
+                        autoComplete="organization-title"
                         required
                         error={!!error}
                         helperText={error?.message}
@@ -196,16 +195,7 @@ export default function AdminSignUp() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <LockOutlined />
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        onClick={() => setPasswordVisible(!passwordVisible)}
-                                    >
-                                        {passwordVisible ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
-                                    </IconButton>
+                                    <BadgeOutlined />
                                 </InputAdornment>
                             )
                         }}
@@ -214,13 +204,12 @@ export default function AdminSignUp() {
             />
             <Controller
                 control={control}
-                name="confirmPassword"
+                name="attendantToken"
                 render={({ field, fieldState: { error } }) => (
                     <TextField
                         {...field}
-                        placeholder="Confirme a senha"
-                        type={passwordVisible ? "text" : "password"}
-                        autoComplete="current-password"
+                        placeholder="Código de participante"
+                        autoComplete="on"
                         required
                         error={!!error}
                         helperText={error?.message}
@@ -228,16 +217,7 @@ export default function AdminSignUp() {
                         InputProps={{
                             startAdornment: (
                                 <InputAdornment position="start">
-                                    <LockOutlined />
-                                </InputAdornment>
-                            ),
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        onClick={() => setPasswordVisible(!passwordVisible)}
-                                    >
-                                        {passwordVisible ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
-                                    </IconButton>
+                                    <CodeOutlined />
                                 </InputAdornment>
                             )
                         }}
@@ -251,21 +231,21 @@ export default function AdminSignUp() {
                 {loading ?
                     <CircularProgress size={26} color="inherit" />
                     :
-                    "Cadastrar"
+                    "Participar"
                 }
             </Button>
             <Typography>
-                Já tem uma conta?
+                Já faz parte de um cliente?
             </Typography>
             <Button
                 component={RouterLink}
                 variant="outlined"
-                to="/auth/login"
+                to="/auth/attendant/login"
             >
-                Faça login
+                Entre como participante
             </Button>
             <Typography>
-                Ou <Link component={RouterLink} to="/auth/attendant/join">faça parte de um cliente</Link>
+                Ou <Link component={RouterLink} to="/auth/signup">cadastre-se como consultor</Link>
             </Typography>
         </motion.form>
     )

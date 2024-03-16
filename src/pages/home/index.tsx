@@ -1,35 +1,48 @@
-import { Button, Typography } from "@mui/material"
-import { useToastsContext } from "../../context/Toasts"
+import { Button, Typography, styled } from "@mui/material"
+import { Link, useNavigate } from "react-router-dom"
+
+const StyledDiv = styled("div")(({ theme }) => ({
+    backgroundColor: theme.palette.primary.main
+}))
 
 export default function Home() {
 
-    const { addToast } = useToastsContext()
-
     return (
-        <div>
-            <Typography>
-                Planify
+        <StyledDiv
+            className="flex flex-col w-screen h-screen items-center justify-center gap-4 p-8"
+        >
+            <Typography
+                variant="h1"
+                color="primary.contrastText"
+                className="text-5xl font-bold text-center mb-8"
+            >
+                Transforme cada atendimento em uma oportunidade de ouro com Planify
             </Typography>
-            <Typography>
+            <Typography
+                variant="h2"
+                color="primary.contrastText"
+                className="text-xl"
+            >
                 Entrar como
             </Typography>
-            <div className="flex">
+            <div className="flex gap-4">
                 <Button
-                    variant="contained"
-                    onClick={() => addToast({
-                        title: "Cliente",
-                        message: "Entrando como cliente",
-                        type: "warning"
-                    })}
+                    component={Link}
+                    variant="outlined"
+                    color="inherit"
+                    to="/auth/attendant/login"
                 >
-                    Cliente
+                    Participante
                 </Button>
                 <Button
-                    variant="contained"
+                    component={Link}
+                    variant="outlined"
+                    color="inherit"
+                    to="/auth/login"
                 >
-                    Admin
+                    Consultor
                 </Button>
             </div>
-        </div>
+        </StyledDiv>
     )
 }

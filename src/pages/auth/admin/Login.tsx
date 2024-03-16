@@ -1,12 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup"
 import { EmailOutlined, LockOutlined, VisibilityOffOutlined, VisibilityOutlined } from "@mui/icons-material"
-import { Button, CircularProgress, IconButton, InputAdornment, TextField, Typography } from "@mui/material"
+import { Button, CircularProgress, IconButton, InputAdornment, Link, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import { Controller, useForm } from "react-hook-form"
 import * as yup from "yup"
 import { IAdminLoginFormValues } from "../../../types/pages/auth/admin/Login"
-import { Link, useNavigate } from "react-router-dom"
+import { Link as RouterLink, useNavigate } from "react-router-dom"
 import { useAuthContext } from "../../../context/Auth"
+import { motion, Variants } from "framer-motion"
 
 const schema: yup.ObjectSchema<IAdminLoginFormValues> = yup.object({
     email: yup
@@ -17,6 +18,27 @@ const schema: yup.ObjectSchema<IAdminLoginFormValues> = yup.object({
         .string()
         .required("Informe a sua senha")
 })
+
+const formVariants: Variants = {
+    hidden: {
+        opacity: 0,
+        y: 20
+    },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.4
+        }
+    },
+    exit: {
+        opacity: 0,
+        y: 20,
+        transition: {
+            duration: 0.1
+        }
+    }
+}
 
 export default function AdminLogin() {
 
@@ -55,9 +77,13 @@ export default function AdminLogin() {
     }
 
     return (
-        <form
+        <motion.form
             className="flex flex-1 flex-col w-full max-w-96 gap-4"
             onSubmit={event => handleSubmit(handleLogin)(event)}
+            variants={formVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
         >
             <Typography
                 variant="h1"
@@ -134,11 +160,15 @@ export default function AdminLogin() {
                 Ainda não possui uma conta?
             </Typography>
             <Button
-                component={Link}
+                component={RouterLink}
+                variant="outlined"
                 to="/auth/signup"
             >
                 Cadastre-se
             </Button>
-        </form>
+            <Typography>
+                Ou <Link component={RouterLink} to="/auth/attendant/login">entre como um participante</Link>
+            </Typography>
+        </motion.form>
     )
 }

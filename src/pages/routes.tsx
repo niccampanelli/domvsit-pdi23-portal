@@ -7,7 +7,7 @@ import Auth from "./auth"
 import AdminLogin from "./auth/admin/Login"
 import AdminSignUp from "./auth/admin/SignUp"
 import AttendantLogin from "./auth/attendant/Login"
-import AttendantSignUp from "./auth/attendant/SignUp"
+import AttendantJoin from "./auth/attendant/Join"
 import Home from "./home"
 import Main from "./main"
 import AdminDashboard from "./main/admin/dashboard"
@@ -72,6 +72,10 @@ export default function Routes() {
                     ),
                     children: [
                         {
+                            path: "/auth",
+                            element: <Navigate to="/auth/login" />
+                        },
+                        {
                             path: "/auth/login",
                             element: <AdminLogin />
                         },
@@ -80,12 +84,16 @@ export default function Routes() {
                             element: <AdminSignUp />
                         },
                         {
+                            path: "/auth/attendant",
+                            element: <Navigate to="/auth/attendant/login" />
+                        },
+                        {
                             path: "/auth/attendant/login",
                             element: <AttendantLogin />
                         },
                         {
-                            path: "/auth/attendant/signup",
-                            element: <AttendantSignUp />
+                            path: "/auth/attendant/join",
+                            element: <AttendantJoin />
                         }
                     ]
                 },

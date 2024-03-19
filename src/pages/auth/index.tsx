@@ -1,6 +1,6 @@
 import { Typography } from "@mui/material"
-import { motion, AnimatePresence, Variants } from "framer-motion"
-import { Outlet, useLocation } from "react-router-dom"
+import { AnimatePresence, Variants, motion } from "framer-motion"
+import { useLocation } from "react-router-dom"
 import AnimatedOutlet from "../../components/AnimatedOutlet"
 
 const bannerVariants: Variants = {

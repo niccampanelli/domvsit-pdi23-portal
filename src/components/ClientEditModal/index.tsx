@@ -1,12 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { EmailOutlined, NotesOutlined, PhoneOutlined } from "@mui/icons-material";
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
+import { Button, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
 import { useToastsContext } from "../../context/Toasts";
 import { IClientEditModalFormValues, IClientEditModalProps } from "../../types/components/ClientEditModal";
 import { getErrorMessageOrDefault } from "../../util/getErrorMessageOrDefault";
+import clientService from "../../services/clientService";
 
 const schema: yup.ObjectSchema<IClientEditModalFormValues> = yup.object().shape({
     name: yup
@@ -24,6 +25,7 @@ const schema: yup.ObjectSchema<IClientEditModalFormValues> = yup.object().shape(
 export default function ClientEditModal({
     open,
     onClose,
+    refreshData,
     client,
     actionButton
 }: IClientEditModalProps) {
@@ -56,7 +58,20 @@ export default function ClientEditModal({
         setLoading(true)
 
         try {
-            // const data 
+            await clientService.updateClient({
+                id: client!.id,
+                name: values.name,
+                email: values.email,
+                phone: values.phone
+            })
+
+            addToast({
+                title: "Cliente editado",
+                message: "O cliente foi editado com sucesso",
+                type: "success"
+            })
+
+            refreshData()
         }
         catch (error) {
             const message = getErrorMessageOrDefault(error)
@@ -69,6 +84,7 @@ export default function ClientEditModal({
         }
         finally {
             setLoading(false)
+            onClose()
         }
     }
 
@@ -175,7 +191,11 @@ export default function ClientEditModal({
                     type="submit"
                     disabled={!isDirty || !isValid || loading}
                 >
-                    Salvar
+                    {loading ?
+                        <CircularProgress size={24} />
+                        :
+                        "Salvar"
+                    }
                 </Button>
             </DialogActions>
             <div className="fixed bottom-8 right-8">

@@ -1,4 +1,4 @@
-import { AddOutlined, ArrowDownwardOutlined, ArrowUpwardOutlined, CloseOutlined, EditOutlined, SearchOutlined } from "@mui/icons-material";
+import { AddOutlined, ArrowDownwardOutlined, ArrowUpwardOutlined, CloseOutlined, DeleteOutlined, EditOutlined, SearchOutlined } from "@mui/icons-material";
 import { Fab, Grid, IconButton, InputAdornment, MenuItem, Skeleton, TextField, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ClientCard from "../../../../components/ClientCard";
@@ -186,7 +186,8 @@ export default function AdminClients() {
                         >
                             <ClientCard
                                 client={client}
-                                onClick={() => handleModalOpen("view", client)}
+                                openViewModal={() => handleModalOpen("view", client)}
+                                openEditModal={() => handleModalOpen("edit", client)}
                             />
                         </Grid>
                     ))
@@ -202,16 +203,28 @@ export default function AdminClients() {
                 onClose={() => setViewModalOpen(false)}
                 client={selectedClient}
                 actionButton={
-                    <Tooltip
-                        title="Editar"
-                        arrow
-                    >
-                        <Fab
-                            onClick={() => handleModalOpen("edit", selectedClient)}
+                    <>
+                        <Tooltip
+                            title="Excluir"
+                            arrow
                         >
-                            <EditOutlined />
-                        </Fab>
-                    </Tooltip>
+                            <Fab
+                                onClick={() => handleModalOpen("edit", selectedClient)}
+                            >
+                                <DeleteOutlined />
+                            </Fab>
+                        </Tooltip>
+                        <Tooltip
+                            title="Editar"
+                            arrow
+                        >
+                            <Fab
+                                onClick={() => handleModalOpen("edit", selectedClient)}
+                            >
+                                <EditOutlined />
+                            </Fab>
+                        </Tooltip>
+                    </>
                 }
             />
             <ClientEditModal

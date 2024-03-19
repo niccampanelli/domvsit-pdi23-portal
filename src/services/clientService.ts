@@ -1,8 +1,17 @@
-import { ICreateClientRequest, ICreateClientResponse, IGetAttendantByIdResponse, IGetAttendantTokenResponse, IGetClientByIdResponse, IIdentifyRequest, IIdentifyResponse, IJoinRequest, IJoinResponse, IListAttendantRequest, IListClientRequest, ListAttendantResponseType, ListClientResponseType } from "../types/services/clientService"
+import { ICreateClientRequest, ICreateClientResponse, IGetAttendantByIdResponse, IGetAttendantTokenResponse, IGetClientByIdResponse, IIdentifyRequest, IIdentifyResponse, IJoinRequest, IJoinResponse, IListAttendantRequest, IListClientRequest, IUpdateClientRequest, IUpdateClientResponse, ListAttendantResponseType, ListClientResponseType } from "../types/services/clientService"
 import API from "./api"
 
 async function createClient(request: ICreateClientRequest): Promise<ICreateClientResponse> {
     const { data } = await API.clientApi.post<ICreateClientResponse>("client/create", request)
+
+    return data
+}
+
+async function updateClient(request: IUpdateClientRequest): Promise<IUpdateClientResponse> {
+    const { data } = await API.clientApi.put<IUpdateClientResponse>(`client/update/${request.id}`, {
+        ...request,
+        id: undefined
+    })
 
     return data
 }
@@ -52,6 +61,7 @@ async function getAttendantToken(clientId: number): Promise<IGetAttendantTokenRe
 
 export default {
     createClient,
+    updateClient,
     authenticate,
     join,
     listAttendant,

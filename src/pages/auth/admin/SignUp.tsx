@@ -28,7 +28,7 @@ const schema: yup.ObjectSchema<IAdminSignUpFormValues> = yup.object({
             "A senha deve conter pelo menos uma letra maiúscula, uma minúscula, um número e um caractere especial"
         )
         .defined(),
-        confirmPassword: yup
+    confirmPassword: yup
         .string()
         .required("Confirme a senha")
         .oneOf([yup.ref("password")], "A confirmação deve ser igual à senha")
@@ -202,7 +202,7 @@ export default function AdminSignUp() {
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
-                                        onClick={() => setPasswordVisible(!passwordVisible)}
+                                        onClick={() => setPasswordVisible(previous => !previous)}
                                     >
                                         {passwordVisible ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
                                     </IconButton>
@@ -220,7 +220,7 @@ export default function AdminSignUp() {
                         {...field}
                         placeholder="Confirme a senha"
                         type={passwordVisible ? "text" : "password"}
-                        autoComplete="current-password"
+                        autoComplete="off"
                         required
                         error={!!error}
                         helperText={error?.message}
@@ -234,7 +234,7 @@ export default function AdminSignUp() {
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
-                                        onClick={() => setPasswordVisible(!passwordVisible)}
+                                        onClick={() => setPasswordVisible(previous => !previous)}
                                     >
                                         {passwordVisible ? <VisibilityOffOutlined /> : <VisibilityOutlined />}
                                     </IconButton>

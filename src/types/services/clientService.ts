@@ -19,6 +19,16 @@ export interface ICreateClientResponse {
     attendantToken: ICreateClientAttendantTokenResponse
 }
 
+export interface IUpdateClientRequest {
+    id: number
+    name: string
+    email: string
+    phone: string
+}
+
+export interface IUpdateClientResponse {
+}
+
 export interface IIdentifyRequest {
     email: string
     attendantToken: string

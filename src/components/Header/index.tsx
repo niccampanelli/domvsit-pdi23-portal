@@ -3,6 +3,10 @@ import { Avatar, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip
 import { useAuthContext } from "../../context/Auth"
 import { useState } from "react"
 import { useNavigationContext } from "../../context/Navigation"
+import UserModal from "../UserModal"
+import getColorFromString from "../../util/getColorFromString"
+import getInitials from "../../util/getInitials"
+import ChangePasswordModal from "../ChangePasswordModal"
 
 const StyledHeader = styled("header")(({ theme }) => ({
     backgroundColor: theme.palette.background.paper,
@@ -17,6 +21,8 @@ export default function Header() {
     const { user, logout } = useAuthContext()
     const { currentNavigation } = useNavigationContext()
 
+    const [userModalOpen, setUserModalOpen] = useState(false)
+    const [changePasswordModalOpen, setChangePasswordModalOpen] = useState(false)
     const [menuAnchor, setMenuAnchor] = useState<null | HTMLElement>(null)
     const menuOpen = Boolean(menuAnchor)
 
@@ -26,6 +32,11 @@ export default function Header() {
 
     function handleMenuClose() {
         setMenuAnchor(null)
+    }
+
+    function handleChangePasswordModalOpen() {
+        setUserModalOpen(false)
+        setChangePasswordModalOpen(true)
     }
 
     return (
@@ -48,12 +59,11 @@ export default function Header() {
                     <Avatar
                         alt={user?.name}
                         sx={{
-                            backgroundColor: "transparent",
-                            color: "text.primary",
-                            border: "1px solid",
+                            bgcolor: getColorFromString(user?.name || ""),
+                            fontWeight: 400
                         }}
                     >
-                        <Person2Outlined />
+                        {getInitials(user?.name || "")}
                     </Avatar>
                 </IconButton>
             </Tooltip>
@@ -70,7 +80,9 @@ export default function Header() {
                     dense: true
                 }}
             >
-                <MenuItem>
+                <MenuItem
+                    onClick={() => setUserModalOpen(true)}
+                >
                     <ListItemIcon>
                         <Person2Outlined />
                     </ListItemIcon>
@@ -87,6 +99,16 @@ export default function Header() {
                     />
                 </MenuItem>
             </Menu>
+            <UserModal
+                open={userModalOpen}
+                onClose={() => setUserModalOpen(false)}
+                user={user}
+                openChangePasswordModal={handleChangePasswordModalOpen}
+            />
+            <ChangePasswordModal
+                open={changePasswordModalOpen}
+                onClose={() => setChangePasswordModalOpen(false)}
+            />
         </StyledHeader>
     )
 }

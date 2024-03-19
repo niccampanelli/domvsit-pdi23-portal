@@ -165,7 +165,7 @@ export default function ClientViewModal({
                     {moment(client?.createdAt).format("[Criado em] DD/MM/YYYY [às] HH:mm")}
                 </Typography>
             </DialogContent>
-            <div className="fixed bottom-8 right-8">
+            <div className="flex flex-col gap-4 fixed bottom-8 right-8">
                 {actionButton}
             </div>
         </Dialog>

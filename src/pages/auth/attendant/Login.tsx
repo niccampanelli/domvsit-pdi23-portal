@@ -1,14 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { CodeOutlined, EmailOutlined } from "@mui/icons-material";
 import { Button, CircularProgress, InputAdornment, Link, TextField, Typography } from "@mui/material";
+import { Variants, motion } from "framer-motion";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Link as RouterLink } from "react-router-dom";
 import * as yup from "yup";
 import { useAuthContext } from "../../../context/Auth";
-import { useToastsContext } from "../../../context/Toasts";
 import { IAttendantLoginFormValues } from "../../../types/pages/auth/attendant/Login";
-import { motion, Variants } from "framer-motion";
 
 const schema: yup.ObjectSchema<IAttendantLoginFormValues> = yup.object({
     email: yup
@@ -61,7 +60,6 @@ export default function AttendantLogin() {
         resolver: yupResolver(schema)
     })
 
-    const { addToast } = useToastsContext()
     const { attendantLogin } = useAuthContext()
 
     const [loading, setLoading] = useState(false)

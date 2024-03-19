@@ -15,3 +15,7 @@ export interface IAttendantData extends ICommomData{
 }
 
 export type IUser = IUserData | IAttendantData
+
+export function isUser(user?: IUser): user is IUserData {
+    return user !== undefined && "role" in user === false;
+}

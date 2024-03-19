@@ -136,7 +136,7 @@ export default function AdminLogin() {
                             endAdornment: (
                                 <InputAdornment position="end">
                                     <IconButton
-                                        onClick={() => setPasswordVisible(!passwordVisible)}
+                                        onClick={() => setPasswordVisible(previous => !previous)}
                                     >
                                         {passwordVisible ? <VisibilityOutlined /> : <VisibilityOffOutlined />}
                                     </IconButton>

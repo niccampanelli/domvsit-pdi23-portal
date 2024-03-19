@@ -19,12 +19,12 @@ export default function ClientCard({
         {
             label: "Visualizar",
             icon: <VisibilityOutlined />,
-            onClick: () => openViewModal()
+            onClick: () => openViewModal?.()
         },
         {
             label: "Editar",
             icon: <EditOutlined />,
-            onClick: () => openEditModal()
+            onClick: () => openEditModal?.()
         }
     ]
 
@@ -58,7 +58,7 @@ export default function ClientCard({
             variant="outlined"
         >
             <CardActionArea
-                onClick={() => openViewModal()}
+                onClick={() => openViewModal?.()}
                 onContextMenu={handleContextMenu}
             >
                 <CardHeader

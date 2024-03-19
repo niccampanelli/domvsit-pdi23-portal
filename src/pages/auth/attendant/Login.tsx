@@ -4,7 +4,7 @@ import { Button, CircularProgress, InputAdornment, Link, TextField, Typography }
 import { Variants, motion } from "framer-motion";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { useAuthContext } from "../../../context/Auth";
 import { IAttendantLoginFormValues } from "../../../types/pages/auth/attendant/Login";
@@ -61,6 +61,7 @@ export default function AttendantLogin() {
     })
 
     const { attendantLogin } = useAuthContext()
+    const navigate = useNavigate()
 
     const [loading, setLoading] = useState(false)
 
@@ -71,6 +72,7 @@ export default function AttendantLogin() {
             attendantToken: values.attendantToken
         })
         setLoading(false)
+        navigate("/attendant")
     }
 
     return (
@@ -140,7 +142,7 @@ export default function AttendantLogin() {
                 {loading ?
                     <CircularProgress size={26} color="inherit" />
                     :
-                    "Participar"
+                    "Entrar"
                 }
             </Button>
             <Typography>

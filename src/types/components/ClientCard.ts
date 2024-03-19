@@ -6,8 +6,8 @@ export interface IClientCardClient {
 
 export interface IClientCardProps {
     client: IClientCardClient,
-    openViewModal: () => void,
-    openEditModal: () => void,
+    openViewModal?: () => void,
+    openEditModal?: () => void,
 }
 
 export interface IClientCardMenuOption {

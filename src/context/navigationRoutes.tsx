@@ -18,5 +18,17 @@ export const navigationRoutes: NavigationItemsType = {
             label: "Clientes",
             path: "/admin/clients",
         }
+    ],
+    "attendant": [
+        {
+            icon: <SpaceDashboardOutlined />,
+            label: "Dashboard",
+            path: "/attendant",
+        },
+        {
+            icon: <CalendarMonthOutlined />,
+            label: "Eventos",
+            path: "/attendant/events",
+        }
     ]
 }

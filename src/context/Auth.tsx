@@ -1,13 +1,13 @@
 import { createContext, useContext, useEffect, useState } from "react"
-import { IAuthContext, IAuthProviderProps } from "../types/context/Auth"
-import { IAuthenticateRequest } from "../types/services/authService"
-import { IUser } from "../types/context/User"
-import authService from "../services/authService"
 import API from "../services/api"
-import { useToastsContext } from "./Toasts"
-import { getErrorMessageOrDefault } from "../util/getErrorMessageOrDefault"
+import authService from "../services/authService"
 import clientService from "../services/clientService"
+import { IAuthContext, IAuthProviderProps } from "../types/context/Auth"
+import { IUser } from "../types/context/User"
+import { IAuthenticateRequest } from "../types/services/authService"
 import { IIdentifyRequest } from "../types/services/clientService"
+import { getErrorMessageOrDefault } from "../util/getErrorMessageOrDefault"
+import { useToastsContext } from "./Toasts"
 
 const AuthContext = createContext<IAuthContext>({
     attendantLogin: async () => { },

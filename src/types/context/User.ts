@@ -19,3 +19,7 @@ export type IUser = IUserData | IAttendantData
 export function isUser(user?: IUser): user is IUserData {
     return user !== undefined && "role" in user === false;
 }
+
+export function isAttendant(user?: IUser): user is IAttendantData {
+    return user !== undefined && "role" in user === true;
+}

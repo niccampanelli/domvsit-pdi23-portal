@@ -1,9 +1,8 @@
-import { ReactNode } from "react"
 import { IListResponseItem } from "../services/eventService"
 
-export interface IEventViewModalProps {
+export interface IEventDeleteModalProps {
     open: boolean
     onClose: () => void
     event?: IListResponseItem
-    actionButton?: ReactNode
+    refreshData: () => void
 }

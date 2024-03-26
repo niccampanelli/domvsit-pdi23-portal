@@ -16,6 +16,10 @@ async function updateClient(request: IUpdateClientRequest): Promise<IUpdateClien
     return data
 }
 
+async function deleteClient(id: number): Promise<void> {
+    await API.clientApi.delete(`client/delete/${id}`)
+}
+
 async function authenticate(request: IIdentifyRequest): Promise<IIdentifyResponse> {
     const { data } = await API.clientApi.post<IIdentifyResponse>("attendant/authenticate", request)
 
@@ -62,6 +66,7 @@ async function getAttendantToken(clientId: number): Promise<IGetAttendantTokenRe
 export default {
     createClient,
     updateClient,
+    deleteClient,
     authenticate,
     join,
     listAttendant,

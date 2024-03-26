@@ -1,8 +1,10 @@
-import { AddOutlined, ArrowDownwardOutlined, ArrowUpwardOutlined, FaceOutlined, SearchOutlined } from "@mui/icons-material";
+import { AddOutlined, ArrowDownwardOutlined, ArrowUpwardOutlined, CloseOutlined, DeleteOutlined, EditOutlined, FaceOutlined, SearchOutlined } from "@mui/icons-material";
 import { Autocomplete, Fab, Grid, IconButton, InputAdornment, MenuItem, Skeleton, TextField, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import EventCard from "../../../../components/EventCard";
+import EventCreateModal from "../../../../components/EventCreateModal";
+import EventDeleteModal from "../../../../components/EventDeleteModal";
 import EventEditModal from "../../../../components/EventEditModal";
 import EventViewModal from "../../../../components/EventViewModal";
 import { useToastsContext } from "../../../../context/Toasts";
@@ -28,9 +30,9 @@ export default function AdminEvents() {
     const [searchClient, setSearchClient] = useState("")
     const [clients, setClients] = useState<IListClientResponseItem[]>([])
     const [selectedClient, setSelectedClient] = useState<IListClientResponseItem | null>(null)
-    const [ocurrenceMin, setOcurrenceMin] = useState<Date>(moment().subtract(1, "month").toDate())
-    const [ocurrenceMax, setOcurrenceMax] = useState<Date>(moment().add(1, "month").toDate())
-    const [sortField, setSortField] = useState<ListRequestSortFieldsType>("createdAt")
+    const [ocurrenceMin, setOcurrenceMin] = useState<Date>(moment().subtract(6, "month").toDate())
+    const [ocurrenceMax, setOcurrenceMax] = useState<Date>(moment().add(6, "month").toDate())
+    const [sortField, setSortField] = useState<ListRequestSortFieldsType>("ocurrence")
     const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("DESC")
     const [events, setEvents] = useState<IListResponseItem[]>([])
     const [itemsCount, setItemsCount] = useState(0);
@@ -39,6 +41,8 @@ export default function AdminEvents() {
     const [clientsLoading, setClientsLoading] = useState(true)
     const [viewModalOpen, setViewModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
+    const [createModalOpen, setCreateModalOpen] = useState(false)
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [selectedEvent, setSelectedEvent] = useState<IListResponseItem | undefined>(undefined)
 
     async function fetchClients() {
@@ -100,16 +104,6 @@ export default function AdminEvents() {
         }
     }
 
-    function handleViewModalOpen(event: IListResponseItem) {
-        setSelectedEvent(event)
-        setViewModalOpen(true)
-    }
-
-    function handleEditModalOpen(event?: IListResponseItem) {
-        setSelectedEvent(event)
-        setEditModalOpen(true)
-    }
-
     function handleEditModalClose() {
         setSelectedEvent(undefined)
         setEditModalOpen(false)
@@ -120,8 +114,49 @@ export default function AdminEvents() {
         setViewModalOpen(false)
     }
 
+    function handleCreateModalClose() {
+        setSelectedEvent(undefined)
+        setCreateModalOpen(false)
+    }
+
+    function handleDeleteModalClose() {
+        setSelectedEvent(undefined)
+        setDeleteModalOpen(false)
+    }
+
     function handleSortOrder() {
         setSortOrder(previous => previous === "ASC" ? "DESC" : "ASC")
+    }
+
+    function handleModalOpen(type: "view" | "edit" | "create" | "delete", event?: IListResponseItem) {
+        setSelectedEvent(event)
+
+        switch (type) {
+            case "view":
+                setViewModalOpen(true)
+                setEditModalOpen(false)
+                setCreateModalOpen(false)
+                setDeleteModalOpen(false)
+                break
+            case "edit":
+                setViewModalOpen(false)
+                setEditModalOpen(true)
+                setCreateModalOpen(false)
+                setDeleteModalOpen(false)
+                break
+            case "create":
+                setViewModalOpen(false)
+                setEditModalOpen(false)
+                setCreateModalOpen(true)
+                setDeleteModalOpen(false)
+                break
+            case "delete":
+                setViewModalOpen(false)
+                setEditModalOpen(false)
+                setCreateModalOpen(false)
+                setDeleteModalOpen(true)
+                break
+        }
     }
 
     useEffect(() => {
@@ -285,7 +320,7 @@ export default function AdminEvents() {
                         >
                             <EventCard
                                 event={event}
-                                onClick={() => handleViewModalOpen(event)}
+                                onClick={() => handleModalOpen("view", event)}
                             />
                         </Grid>
                     ))
@@ -298,7 +333,7 @@ export default function AdminEvents() {
             >
                 <Fab
                     className="fixed bottom-8 right-8"
-                    onClick={() => handleEditModalOpen(undefined)}
+                    onClick={() => handleModalOpen("create")}
                 >
                     <AddOutlined />
                 </Fab>
@@ -307,13 +342,61 @@ export default function AdminEvents() {
                 open={viewModalOpen}
                 onClose={() => handleViewModalClose()}
                 event={selectedEvent}
-                openEditModal={event => handleEditModalOpen(event)}
+                actionButton={
+                    <>
+                        <Tooltip
+                            title="Deletar evento"
+                            arrow
+                        >
+                            <Fab
+                                onClick={() => handleModalOpen("delete", selectedEvent)}
+                            >
+                                <DeleteOutlined />
+                            </Fab>
+                        </Tooltip>
+                        <Tooltip
+                            title="Editar"
+                            arrow
+                        >
+                            <Fab
+                                onClick={() => handleModalOpen("edit", selectedEvent)}
+                            >
+                                <EditOutlined />
+                            </Fab>
+                        </Tooltip>
+                    </>
+                }
             />
             <EventEditModal
                 open={editModalOpen}
                 onClose={() => handleEditModalClose()}
                 event={selectedEvent}
-                openViewModal={event => handleViewModalOpen(event)}
+                refreshData={fetchEvents}
+                actionButton={
+                    <>
+                        <Tooltip
+                            title="Cancelar edição"
+                            arrow
+                        >
+                            <Fab
+                                onClick={() => handleModalOpen("view", selectedEvent)}
+                            >
+                                <CloseOutlined />
+                            </Fab>
+                        </Tooltip>
+                    </>
+                }
+            />
+            <EventCreateModal
+                open={createModalOpen}
+                onClose={() => handleCreateModalClose()}
+                refreshData={fetchEvents}
+            />
+            <EventDeleteModal
+                open={deleteModalOpen}
+                onClose={() => handleDeleteModalClose()}
+                event={selectedEvent}
+                refreshData={fetchEvents}
             />
         </div>
     )

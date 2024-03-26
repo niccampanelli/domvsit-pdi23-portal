@@ -1,5 +1,5 @@
-import { CheckCircleOutline, Person2Outlined } from "@mui/icons-material";
-import { Avatar, Card, CardActionArea, CardHeader, Dialog, DialogContent, Divider, InputAdornment, List, TextField, Tooltip, Typography } from "@mui/material";
+import { CheckCircleOutline, Close, Person2Outlined } from "@mui/icons-material";
+import { Avatar, Card, CardActionArea, CardHeader, Dialog, DialogContent, Divider, IconButton, InputAdornment, List, TextField, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useToastsContext } from "../../context/Toasts";
 import clientService from "../../services/clientService";
@@ -12,6 +12,7 @@ import getInitials from "../../util/getInitials";
 export default function AttendantSearchModal({
     open,
     onClose,
+    clientId,
     selected,
     onSelect
 }: IAttendantSearchModalProps) {
@@ -28,7 +29,8 @@ export default function AttendantSearchModal({
             const data = await clientService.listAttendant({
                 page: 1,
                 limit: 10,
-                search
+                search,
+                clientId
             })
 
             setAttendants(data.data)
@@ -70,6 +72,12 @@ export default function AttendantSearchModal({
             }, 500)
         )
     }, [search])
+
+    useEffect(() => {
+        if (open) {
+            fetchAttendants()
+        }
+    }, [open])
 
     return (
         <Dialog maxWidth="xs" fullWidth open={open} onClose={onClose}>
@@ -116,6 +124,20 @@ export default function AttendantSearchModal({
                                     </Avatar>
                                 </Tooltip>
                             ))}
+                            <Tooltip
+                                title="Remover todos"
+                                arrow
+                            >
+                                <IconButton
+                                    size="small"
+                                    onClick={() => {
+                                        setSelectedAttendants([])
+                                        onSelect?.([])
+                                    }}
+                                >
+                                    <Close />
+                                </IconButton>
+                            </Tooltip>
                         </div>
                         <Typography
                             className="text-xs"

@@ -8,6 +8,8 @@ export interface IClientCardProps {
     client: IClientCardClient,
     openViewModal?: () => void,
     openEditModal?: () => void,
+    openDeleteModal?: () => void,
+    showMenu?: boolean
 }
 
 export interface IClientCardMenuOption {

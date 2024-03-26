@@ -2,14 +2,15 @@ import { AddOutlined, ArrowDownwardOutlined, ArrowUpwardOutlined, CloseOutlined,
 import { Fab, Grid, IconButton, InputAdornment, MenuItem, Skeleton, TextField, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import ClientCard from "../../../../components/ClientCard";
+import ClientCreateModal from "../../../../components/ClientCreateModal";
+import ClientEditModal from "../../../../components/ClientEditModal";
+import ClientViewModal from "../../../../components/ClientViewModal";
 import { useToastsContext } from "../../../../context/Toasts";
 import clientService from "../../../../services/clientService";
 import { IListClientResponseItem, ListClientRequestSortFieldsType } from "../../../../types/services/clientService";
 import { getErrorMessageOrDefault } from "../../../../util/getErrorMessageOrDefault";
 import AdminClientsLoading from "./Loading";
-import ClientViewModal from "../../../../components/ClientViewModal";
-import ClientEditModal from "../../../../components/ClientEditModal";
-import ClientCreateModal from "../../../../components/ClientCreateModal";
+import ClientDeleteModal from "../../../../components/ClientDeleteModal";
 
 export default function AdminClients() {
 
@@ -32,6 +33,7 @@ export default function AdminClients() {
     const [viewModalOpen, setViewModalOpen] = useState(false)
     const [editModalOpen, setEditModalOpen] = useState(false)
     const [createModalOpen, setCreateModalOpen] = useState(false)
+    const [deleteModalOpen, setDeleteModalOpen] = useState(false)
     const [selectedClient, setSelectedClient] = useState<IListClientResponseItem | undefined>()
 
     async function fetchClients() {
@@ -40,7 +42,7 @@ export default function AdminClients() {
         try {
             const data = await clientService.listClient({
                 page: 1,
-                limit: 16,
+                limit: 20,
                 sortField,
                 sortOrder,
                 search
@@ -64,23 +66,32 @@ export default function AdminClients() {
         }
     }
 
-    function handleModalOpen(type: "view" | "edit" | "create", client?: IListClientResponseItem) {
+    function handleModalOpen(type: "view" | "edit" | "create" | "delete", client?: IListClientResponseItem) {
         setSelectedClient(client)
 
         if (type === "view") {
             setViewModalOpen(true)
             setEditModalOpen(false)
             setCreateModalOpen(false)
+            setDeleteModalOpen(false)
         }
         else if (type === "edit") {
             setViewModalOpen(false)
             setEditModalOpen(true)
             setCreateModalOpen(false)
+            setDeleteModalOpen(false)
         }
         else if (type === "create") {
             setViewModalOpen(false)
             setEditModalOpen(false)
             setCreateModalOpen(true)
+            setDeleteModalOpen(false)
+        }
+        else if (type === "delete") {
+            setViewModalOpen(false)
+            setEditModalOpen(false)
+            setCreateModalOpen(false)
+            setDeleteModalOpen(true)
         }
     }
 
@@ -170,7 +181,7 @@ export default function AdminClients() {
                 }
             </Typography>
             <Grid
-                className="mt-4"
+                className="mt-4 mb-16"
                 container
                 spacing={2}
             >
@@ -180,14 +191,19 @@ export default function AdminClients() {
                     clients.map(client => (
                         <Grid
                             key={client.id}
-                            md={3}
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            xl={2}
                             item
-                            xs={2}
                         >
                             <ClientCard
                                 client={client}
+                                showMenu
                                 openViewModal={() => handleModalOpen("view", client)}
                                 openEditModal={() => handleModalOpen("edit", client)}
+                                openDeleteModal={() => handleModalOpen("delete", client)}
                             />
                         </Grid>
                     ))
@@ -209,7 +225,7 @@ export default function AdminClients() {
                             arrow
                         >
                             <Fab
-                                onClick={() => handleModalOpen("edit", selectedClient)}
+                                onClick={() => handleModalOpen("delete", selectedClient)}
                             >
                                 <DeleteOutlined />
                             </Fab>
@@ -248,6 +264,12 @@ export default function AdminClients() {
             <ClientCreateModal
                 open={createModalOpen}
                 onClose={() => setCreateModalOpen(false)}
+                refreshData={fetchClients}
+            />
+            <ClientDeleteModal
+                open={deleteModalOpen}
+                onClose={() => setDeleteModalOpen(false)}
+                client={selectedClient}
                 refreshData={fetchClients}
             />
         </div>

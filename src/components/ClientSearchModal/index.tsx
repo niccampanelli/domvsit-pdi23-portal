@@ -1,5 +1,5 @@
-import { CheckCircleOutline, FaceOutlined } from "@mui/icons-material";
-import { Avatar, Card, CardActionArea, CardHeader, CircularProgress, Dialog, DialogContent, Divider, InputAdornment, List, TextField, Typography } from "@mui/material";
+import { CheckCircleOutline, Close, FaceOutlined } from "@mui/icons-material";
+import { Avatar, Card, CardActionArea, CardHeader, Dialog, DialogContent, Divider, IconButton, InputAdornment, List, TextField, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useToastsContext } from "../../context/Toasts";
 import clientService from "../../services/clientService";
@@ -67,7 +67,7 @@ export default function ClientSearchModal({
     }, [search])
 
     return (
-        <Dialog maxWidth="xs" open={open} onClose={onClose}>
+        <Dialog fullWidth maxWidth="xs" open={open} onClose={onClose}>
             <DialogContent className="flex flex-col gap-4">
                 <TextField
                     value={search}
@@ -122,6 +122,18 @@ export default function ClientSearchModal({
                                     >
                                         {selectedClient.email}
                                     </Typography>
+                                }
+                                action={
+                                    <Tooltip
+                                        title="Desfazer seleção"
+                                        arrow
+                                    >
+                                        <IconButton
+                                            onClick={() => handleClientSelection(selectedClient)}
+                                        >
+                                            <Close />
+                                        </IconButton>
+                                    </Tooltip>
                                 }
                             />
                         </Card>

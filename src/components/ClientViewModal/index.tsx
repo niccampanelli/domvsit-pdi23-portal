@@ -56,9 +56,7 @@ export default function ClientViewModal({
 
     return (
         <Dialog maxWidth="xs" fullWidth open={open} onClose={onClose}>
-            <DialogTitle
-                className="flex items-center gap-4"
-            >
+            <DialogTitle className="flex items-center gap-4">
                 <Avatar
                     alt={client?.name}
                     sx={{
@@ -159,9 +157,7 @@ export default function ClientViewModal({
                         </CardContent>
                     </Card>
                 }
-                <Typography
-                    variant="caption"
-                >
+                <Typography variant="caption">
                     {moment(client?.createdAt).format("[Criado em] DD/MM/YYYY [às] HH:mm")}
                 </Typography>
             </DialogContent>

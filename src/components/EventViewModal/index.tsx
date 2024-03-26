@@ -1,5 +1,5 @@
-import { EditOutlined, LinkOutlined } from "@mui/icons-material";
-import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Fab, Skeleton, Tooltip, Typography } from "@mui/material";
+import { LinkOutlined } from "@mui/icons-material";
+import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Skeleton, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
 import { useToastsContext } from "../../context/Toasts";
@@ -15,7 +15,7 @@ export default function EventViewModal({
     open,
     onClose,
     event,
-    openEditModal
+    actionButton
 }: IEventViewModalProps) {
 
     const { addToast } = useToastsContext()
@@ -70,11 +70,6 @@ export default function EventViewModal({
         finally {
             setAttendantsLoading(false)
         }
-    }
-
-    function handleOpenEditModal() {
-        onClose()
-        openEditModal!(event)
     }
 
     useEffect(() => {
@@ -145,17 +140,11 @@ export default function EventViewModal({
                             ))}
                     </div>
                 </div>
-                <div
-                    className="flex flex-col gap-2"
-                >
-                    <Typography
-                        className="font-bold"
-                    >
+                <div className="flex flex-col gap-2">
+                    <Typography className="font-bold">
                         Cliente
                     </Typography>
-                    <div
-                        className="flex items-center gap-2"
-                    >
+                    <div className="flex items-center gap-2">
                         {clientLoading ?
                             <Skeleton
                                 variant="circular"
@@ -175,9 +164,7 @@ export default function EventViewModal({
                                 {getInitials(client?.name || "")}
                             </Avatar>
                         }
-                        <Typography
-                            className="font-bold"
-                        >
+                        <Typography className="font-bold">
                             {clientLoading ?
                                 <Skeleton
                                     variant="text"
@@ -189,12 +176,8 @@ export default function EventViewModal({
                         </Typography>
                     </div>
                 </div>
-                <div
-                    className="flex flex-col gap-2"
-                >
-                    <Typography
-                        className="font-bold"
-                    >
+                <div className="flex flex-col gap-2">
+                    <Typography className="font-bold">
                         Link associado
                     </Typography>
                     {event?.link &&
@@ -216,13 +199,9 @@ export default function EventViewModal({
                         </Tooltip>
                     }
                 </div>
-                <Divider
-                    className="w-full"
-                />
+                <Divider className="w-full" />
                 {(event?.tags?.length ?? 0) > 0 &&
-                    <div
-                        className="flex flex-wrap gap-2"
-                    >
+                    <div className="flex flex-wrap gap-2">
                         {event?.tags?.map(tag => (
                             <Chip
                                 key={tag}
@@ -232,26 +211,13 @@ export default function EventViewModal({
                         ))}
                     </div>
                 }
-                <Typography
-                    variant="caption"
-                >
+                <Typography variant="caption">
                     {moment(event?.createdAt).format("[Criado em] DD/MM/YYYY [às] HH:mm")} | {moment(event?.updatedAt).format("[Última atualização em] DD/MM/YYYY [às] HH:mm")}
                 </Typography>
             </DialogContent>
-            {openEditModal &&
-                <Tooltip
-                    title="Editar evento"
-                    placement="left"
-                    arrow
-                >
-                    <Fab
-                        className="fixed bottom-8 right-8"
-                        onClick={handleOpenEditModal}
-                    >
-                        <EditOutlined />
-                    </Fab>
-                </Tooltip>
-            }
+            <div className="flex flex-col gap-4 fixed bottom-8 right-8">
+                {actionButton}
+            </div>
         </Dialog>
     )
 }

@@ -40,17 +40,10 @@ export default class API {
             },
         })
 
-        instance.interceptors.response.use(
-            function (response) {
-                if (response.data && typeof response.data === "object") {
-                    transformDatetimeStrings(response.data)
-                }
-                return response
-            },
-            function (error) {
-                return Promise.reject(error)
-            }
-        )
+        function isDatetimeString(value: string) {
+            const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/
+            return regex.test(value)
+        }
 
         function transformDatetimeStrings(data: any) {
             for (const key in data) {
@@ -62,13 +55,11 @@ export default class API {
             }
         }
 
-        function isDatetimeString(value: string) {
-            const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d+)?Z$/
-            return regex.test(value)
-        }
-
         instance.interceptors.response.use(
-            async function (response) {
+            function (response) {
+                if (response.data && typeof response.data === "object") {
+                    transformDatetimeStrings(response.data)
+                }
                 return response
             },
             async function (error) {
@@ -79,8 +70,11 @@ export default class API {
 
                     if (response.token) {
                         localStorage.setItem("authentication_token", response.token)
-                        axios.defaults.headers.common["Authorization"] = `Bearer ${response.token}`
+                        instance.defaults.headers.common["Authorization"] = `Bearer ${response.token}`
+                        
                         API.refreshInstances()
+
+                        originalRequest.headers["Authorization"] = `Bearer ${response.token}`
 
                         const retry = await instance.request(originalRequest)
                         return Promise.resolve(retry)

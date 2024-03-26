@@ -1,4 +1,4 @@
-import { EditOutlined, MoreVertOutlined, VisibilityOutlined } from "@mui/icons-material";
+import { DeleteOutlined, EditOutlined, MoreVertOutlined, VisibilityOutlined } from "@mui/icons-material";
 import { Avatar, Card, CardActionArea, CardHeader, IconButton, Tooltip, Typography } from "@mui/material";
 import { useState } from "react";
 import { IClientCardMenuOption, IClientCardProps } from "../../types/components/ClientCard";
@@ -10,7 +10,9 @@ import ClientCardMenu from "./Menu";
 export default function ClientCard({
     client,
     openViewModal,
-    openEditModal
+    openEditModal,
+    openDeleteModal,
+    showMenu = false
 }: IClientCardProps) {
 
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
@@ -25,10 +27,17 @@ export default function ClientCard({
             label: "Editar",
             icon: <EditOutlined />,
             onClick: () => openEditModal?.()
+        },
+        {
+            label: "Excluir",
+            icon: <DeleteOutlined />,
+            onClick: () => openDeleteModal?.()
         }
     ]
 
     function handleMenuOpen(event: React.MouseEvent<HTMLElement>) {
+        if (!showMenu) return
+
         event.stopPropagation()
         setMenuAnchor(event.currentTarget)
     }
@@ -42,6 +51,8 @@ export default function ClientCard({
     }
 
     function handleContextMenu(event: React.MouseEvent<HTMLElement>) {
+        if (!showMenu) return
+
         event.preventDefault()
 
         const anchor = document.createElement("div")
@@ -84,10 +95,11 @@ export default function ClientCard({
                         <Typography
                             className="text-xs"
                         >
-                            {getTruncatedText(client.email, 22)}
+                            {getTruncatedText(client.email, 20)}
                         </Typography>
                     }
                     action={
+                        showMenu &&
                         <Tooltip
                             title="Opções"
                             arrow

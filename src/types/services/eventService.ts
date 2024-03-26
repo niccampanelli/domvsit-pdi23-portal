@@ -61,7 +61,6 @@ export interface IUpdateRequest {
     tags?: string[]
     link?: string
     ocurrence?: Date
-    clientId?: number
     status?: boolean
     eventAttendants?: IUpdateEventAttendantRequest[]
 }

@@ -3,7 +3,6 @@ import { Grid, IconButton, InputAdornment, MenuItem, Skeleton, TextField, Toolti
 import moment from "moment";
 import { useEffect, useState } from "react";
 import EventCard from "../../../../components/EventCard";
-import EventEditModal from "../../../../components/EventEditModal";
 import EventViewModal from "../../../../components/EventViewModal";
 import { useAuthContext } from "../../../../context/Auth";
 import { useToastsContext } from "../../../../context/Toasts";
@@ -35,7 +34,6 @@ export default function AttendantEvents() {
     const [totalItems, setTotalItems] = useState(0);
     const [loading, setLoading] = useState(true)
     const [viewModalOpen, setViewModalOpen] = useState(false)
-    const [editModalOpen, setEditModalOpen] = useState(false)
     const [selectedEvent, setSelectedEvent] = useState<IListResponseItem | undefined>(undefined)
 
     async function fetchEvents() {
@@ -77,16 +75,6 @@ export default function AttendantEvents() {
     function handleViewModalOpen(event: IListResponseItem) {
         setSelectedEvent(event)
         setViewModalOpen(true)
-    }
-
-    function handleEditModalOpen(event?: IListResponseItem) {
-        setSelectedEvent(event)
-        setEditModalOpen(true)
-    }
-
-    function handleEditModalClose() {
-        setSelectedEvent(undefined)
-        setEditModalOpen(false)
     }
 
     function handleViewModalClose() {
@@ -212,7 +200,11 @@ export default function AttendantEvents() {
                     events.map(event => (
                         <Grid
                             item
-                            xs={3}
+                            xs={12}
+                            sm={6}
+                            md={4}
+                            lg={3}
+                            xl={2}
                             key={event.id}
                         >
                             <EventCard
@@ -227,13 +219,6 @@ export default function AttendantEvents() {
                 open={viewModalOpen}
                 onClose={() => handleViewModalClose()}
                 event={selectedEvent}
-                openEditModal={event => handleEditModalOpen(event)}
-            />
-            <EventEditModal
-                open={editModalOpen}
-                onClose={() => handleEditModalClose()}
-                event={selectedEvent}
-                openViewModal={event => handleViewModalOpen(event)}
             />
         </div>
     )

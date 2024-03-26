@@ -25,8 +25,13 @@ async function update(request: IUpdateRequest): Promise<IUpdateResponse> {
     return data
 }
 
+async function deleteEvent(id: number): Promise<void> {
+    await API.eventApi.delete(`event/delete/${id}`)
+}
+
 export default {
     newEvent,
     list,
-    update
+    update,
+    deleteEvent
 }

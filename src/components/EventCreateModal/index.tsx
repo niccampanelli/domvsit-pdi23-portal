@@ -1,24 +1,21 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Close, Face3Outlined, LinkOutlined, NotesOutlined, TodayOutlined } from "@mui/icons-material";
+import { Close, Face3Outlined, FaceOutlined, LinkOutlined, NotesOutlined, TodayOutlined } from "@mui/icons-material";
 import { Autocomplete, Avatar, Button, Card, CardHeader, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, IconButton, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
-import moment from "moment";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
-import { useToastsContext } from "../../context/Toasts";
-import clientService from "../../services/clientService";
 import eventService from "../../services/eventService";
-import { IEventEditModalFormValues, IEventEditModalProps } from "../../types/components/EventEdtModal";
+import { IEventCreateModalFormValues, IEventCreateModalProps } from "../../types/components/EventCreateModal";
 import getColorFromString from "../../util/getColorFromString";
 import { getErrorMessageOrDefault } from "../../util/getErrorMessageOrDefault";
 import getFieldErrorNestedMessages from "../../util/getFieldErrorNestedMessage";
 import getInitials from "../../util/getInitials";
 import AttendantSearchModal from "../AttendantSearchModal";
 import ClientSearchModal from "../ClientSearchModal";
-import EventEditModalAttendantsLoading from "./AttendantsLoading";
-import EventEditModalClientLoading from "./ClientLoading";
+import { useToastsContext } from "../../context/Toasts";
+import moment from "moment";
 
-const schema: yup.ObjectSchema<IEventEditModalFormValues> = yup.object().shape({
+const schema: yup.ObjectSchema<IEventCreateModalFormValues> = yup.object().shape({
     title: yup
         .string()
         .required("Insira um título para o evento"),
@@ -68,15 +65,13 @@ const schema: yup.ObjectSchema<IEventEditModalFormValues> = yup.object().shape({
         .required("Insira ao menos um participante para o evento")
 })
 
-export default function EventEditModal({
+export default function EventCreateModal({
     open,
     onClose,
-    event,
-    refreshData,
-    actionButton
-}: IEventEditModalProps) {
+    refreshData
+}: IEventCreateModalProps) {
 
-    const defaultValues: IEventEditModalFormValues = {
+    const defaultValues: IEventCreateModalFormValues = {
         title: "",
         description: "",
         ocurrence: new Date(),
@@ -98,8 +93,11 @@ export default function EventEditModal({
         },
         reset,
         getValues,
-        setValue
-    } = useForm<IEventEditModalFormValues>({
+        setError,
+        clearErrors,
+        watch,
+        resetField
+    } = useForm<IEventCreateModalFormValues>({
         mode: "all",
         defaultValues,
         resolver: yupResolver(schema)
@@ -109,29 +107,31 @@ export default function EventEditModal({
 
     const [clientSearchModalOpen, setClientSearchModalOpen] = useState(false)
     const [attendantSearchModalOpen, setAttendantSearchModalOpen] = useState(false)
-    const [clientLoading, setClientLoading] = useState(false)
-    const [attendantsLoading, setAttendantsLoading] = useState(false)
     const [loading, setLoading] = useState(false)
 
-    async function handleEdit(values: IEventEditModalFormValues) {
+    async function handleCreate(values: IEventCreateModalFormValues) {
         setLoading(true)
 
         try {
-            await eventService.update({
-                id: event!.id,
+            const data = await eventService.newEvent({
                 title: values.title,
                 description: values.description,
                 ocurrence: values.ocurrence,
                 link: values.link,
                 tags: values.tags,
+                clientId: values.client.id,
                 eventAttendants: values.attendants.map(attendant => ({
                     attendantId: attendant.id
                 }))
             })
 
+            if (!data.createdId) {
+                throw new Error("Evento não criado")
+            }
+
             addToast({
-                title: "Evento editado",
-                message: "O evento foi editado com sucesso",
+                title: "Evento criado com sucesso",
+                message: "O evento foi criado com sucesso",
                 type: "success"
             })
 
@@ -141,7 +141,7 @@ export default function EventEditModal({
             const message = getErrorMessageOrDefault(error)
 
             addToast({
-                title: "Erro ao editar o evento",
+                title: "Erro ao criar o evento",
                 message,
                 type: "error"
             })
@@ -152,49 +152,25 @@ export default function EventEditModal({
         }
     }
 
-    async function setEventValues() {
-        if (!event) return
-
-        reset({
-            title: event.title,
-            description: event.description,
-            ocurrence: new Date(event.ocurrence),
-            link: event.link,
-            tags: event.tags,
-            client: defaultValues.client,
-            attendants: defaultValues.attendants
-        })
-
-        setClientLoading(true)
-        const client = await clientService.getClientById(event.clientId)
-        setClientLoading(false)
-
-        setValue("client", {
-            id: client.id ?? 0,
-            name: client.name ?? ""
-        })
-
-        setAttendantsLoading(true)
-        var attendants = []
-
-        for (const attendant of event.eventAttendants) {
-            const data = await clientService.getAttendantById(attendant.attendantId)
-            attendants.push(data)
-        }
-
-        setAttendantsLoading(false)
-
-        setValue("attendants", attendants)
-    }
-
     useEffect(() => {
-        if (event) {
-            setEventValues()
+        resetField("attendants")
+
+        if (watch("client.id") === 0) {
+            setError("attendants", {
+                type: "deps",
+                message: "Primeiro selecione um cliente para adicionar participantes ao evento"
+            })
         }
         else {
+            clearErrors("attendants")
+        }
+    }, [watch("client.id")])
+
+    useEffect(() => {
+        if (open) {
             reset(defaultValues)
         }
-    }, [event])
+    }, [open])
 
     return (
         <Dialog
@@ -204,11 +180,11 @@ export default function EventEditModal({
             onClose={onClose}
             PaperProps={{
                 component: "form",
-                onSubmit: handleSubmit(handleEdit)
+                onSubmit: handleSubmit(handleCreate)
             }}
         >
             <DialogTitle>
-                Editar evento
+                Novo evento
             </DialogTitle>
             <DialogContent className="flex flex-col gap-4">
                 <Controller
@@ -324,141 +300,166 @@ export default function EventEditModal({
                         />
                     )}
                 />
-                {clientLoading ?
-                    <EventEditModalClientLoading />
-                    :
-                    <Controller
-                        control={control}
-                        name="client"
-                        render={({ field }) => (
-                            <div className="flex flex-col gap-2">
-                                <Typography className="font-bold">
-                                    Cliente
-                                </Typography>
-                                {field.value?.id !== 0 &&
-                                    <Card
-                                        variant="outlined"
-                                    >
-                                        <CardHeader
-                                            avatar={
+                <Controller
+                    control={control}
+                    name="client"
+                    render={({ field, fieldState: { error } }) => (
+                        <div className="flex flex-col gap-2">
+                            <Typography className="font-bold">
+                                Cliente
+                            </Typography>
+                            {field.value?.id !== 0 &&
+                                <Card
+                                    variant="outlined"
+                                >
+                                    <CardHeader
+                                        avatar={
+                                            <Avatar
+                                                alt={field.value.name}
+                                                sx={{
+                                                    bgcolor: getColorFromString(field.value.name),
+                                                    fontSize: 14,
+                                                    width: 32,
+                                                    height: 32
+                                                }}
+                                            >
+                                                {getInitials(field.value.name)}
+                                            </Avatar>
+                                        }
+                                        title={
+                                            <Typography
+                                                variant="h3"
+                                                className="font-bold text-base"
+                                            >
+                                                {field.value.name}
+                                            </Typography>
+                                        }
+                                        action={
+                                            <Tooltip
+                                                title="Remover cliente"
+                                                arrow
+                                            >
+                                                <IconButton
+                                                    size="small"
+                                                    onClick={() => field.onChange({ id: 0, name: "" })}
+                                                >
+                                                    <Close />
+                                                </IconButton>
+                                            </Tooltip>
+                                        }
+                                    />
+                                </Card>
+                            }
+                            <Button
+                                variant="outlined"
+                                fullWidth
+                                color={!!error ? "error" : "primary"}
+                                onClick={() => setClientSearchModalOpen(true)}
+                                startIcon={
+                                    <FaceOutlined />
+                                }
+                            >
+                                {field.value.id === 0 ?
+                                    "Selecionar cliente"
+                                    :
+                                    "Alterar cliente"
+                                }
+                            </Button>
+                            {!!error &&
+                                <FormHelperText error>
+                                    {getFieldErrorNestedMessages(error).join(". ")}
+                                </FormHelperText>
+                            }
+                            <ClientSearchModal
+                                open={clientSearchModalOpen}
+                                onClose={() => setClientSearchModalOpen(false)}
+                                selected={field.value.id === 0 ? undefined : field.value as any}
+                                onSelect={client => field.onChange(client ? client : { id: 0, name: "" })}
+                            />
+                        </div>
+                    )}
+                />
+                <Controller
+                    control={control}
+                    name="attendants"
+                    render={({ field, fieldState: { error } }) => (
+                        <div className="flex flex-col gap-2">
+                            <Typography className="font-bold">
+                                Participantes
+                            </Typography>
+                            {field.value.length > 0 &&
+                                <div className="flex flex-col gap-2">
+                                    <div className="flex flex-wrap gap-1">
+                                        {field.value.map(attendant => (
+                                            <Tooltip
+                                                key={attendant.id}
+                                                title={attendant.name}
+                                                arrow
+                                            >
                                                 <Avatar
-                                                    alt={field.value.name}
+                                                    key={attendant.id}
+                                                    alt={attendant.name}
                                                     sx={{
-                                                        bgcolor: getColorFromString(field.value.name),
+                                                        bgcolor: getColorFromString(attendant.name),
                                                         fontSize: 14,
                                                         width: 32,
                                                         height: 32
                                                     }}
                                                 >
-                                                    {getInitials(field.value.name)}
+                                                    {getInitials(attendant.name)}
                                                 </Avatar>
-                                            }
-                                            title={
-                                                <Typography
-                                                    variant="h3"
-                                                    className="font-bold text-base"
-                                                >
-                                                    {field.value.name}
-                                                </Typography>
-                                            }
-                                        />
-                                    </Card>
-                                }
-                                <ClientSearchModal
-                                    open={clientSearchModalOpen}
-                                    onClose={() => setClientSearchModalOpen(false)}
-                                    selected={field.value.id === 0 ? undefined : field.value as any}
-                                    onSelect={client => field.onChange(client ? client : { id: 0, name: "" })}
-                                />
-                            </div>
-                        )}
-                    />
-                }
-                {attendantsLoading ?
-                    <EventEditModalAttendantsLoading />
-                    :
-                    <Controller
-                        control={control}
-                        name="attendants"
-                        render={({ field, fieldState: { error } }) => (
-                            <div className="flex flex-col gap-2">
-                                <Typography className="font-bold">
-                                    Participantes
-                                </Typography>
-                                {field.value.length > 0 &&
-                                    <div className="flex flex-col gap-2">
-                                        <div className="flex flex-wrap gap-1">
-                                            {field.value.map(attendant => (
-                                                <Tooltip
-                                                    key={attendant.id}
-                                                    title={attendant.name}
-                                                    arrow
-                                                >
-                                                    <Avatar
-                                                        key={attendant.id}
-                                                        alt={attendant.name}
-                                                        sx={{
-                                                            bgcolor: getColorFromString(attendant.name),
-                                                            fontSize: 14,
-                                                            width: 32,
-                                                            height: 32
-                                                        }}
-                                                    >
-                                                        {getInitials(attendant.name)}
-                                                    </Avatar>
-                                                </Tooltip>
-                                            ))}
-                                            <Tooltip
-                                                title="Remover todos"
-                                                arrow
-                                            >
-                                                <IconButton
-                                                    size="small"
-                                                    onClick={() => field.onChange([])}
-                                                >
-                                                    <Close />
-                                                </IconButton>
                                             </Tooltip>
-                                        </div>
-                                        <Typography
-                                            className="text-xs"
+                                        ))}
+                                        <Tooltip
+                                            title="Remover todos"
+                                            arrow
                                         >
-                                            {field.value.map(attendant => attendant.name).join(", ")}
-                                        </Typography>
+                                            <IconButton
+                                                size="small"
+                                                onClick={() => field.onChange([])}
+                                            >
+                                                <Close />
+                                            </IconButton>
+                                        </Tooltip>
                                     </div>
+                                    <Typography
+                                        className="text-xs"
+                                    >
+                                        {field.value.map(attendant => attendant.name).join(", ")}
+                                    </Typography>
+                                </div>
+                            }
+                            <Button
+                                variant="outlined"
+                                fullWidth
+                                color={!!error ? "error" : "primary"}
+                                onClick={() => setAttendantSearchModalOpen(true)}
+                                disabled={getValues("client.id") === 0}
+                                startIcon={
+                                    <Face3Outlined />
                                 }
-                                <Button
-                                    variant="outlined"
-                                    fullWidth
-                                    color={!!error ? "error" : "primary"}
-                                    onClick={() => setAttendantSearchModalOpen(true)}
-                                    disabled={getValues("client.id") === 0}
-                                    startIcon={
-                                        <Face3Outlined />
-                                    }
-                                >
-                                    {field.value.length > 0 ?
-                                        "Alterar participantes"
-                                        :
-                                        "Escolher participantes"
-                                    }
-                                </Button>
-                                {!!error &&
-                                    <FormHelperText error>
-                                        {getFieldErrorNestedMessages(error).join(". ")}
-                                    </FormHelperText>
+                            >
+                                {field.value.length > 0 ?
+                                    "Alterar participantes"
+                                    :
+                                    "Escolher participantes"
                                 }
-                                <AttendantSearchModal
-                                    open={attendantSearchModalOpen}
-                                    onClose={() => setAttendantSearchModalOpen(false)}
-                                    clientId={getValues("client.id")}
-                                    selected={field.value as any[]}
-                                    onSelect={attendants => field.onChange(attendants)}
-                                />
-                            </div>
-                        )}
-                    />
-                }
+                            </Button>
+                            {!!error &&
+                                <FormHelperText error>
+                                    {getFieldErrorNestedMessages(error).join(". ")}
+                                </FormHelperText>
+                            }
+                            <AttendantSearchModal
+                                open={attendantSearchModalOpen}
+                                onClose={() => setAttendantSearchModalOpen(false)}
+                                clientId={getValues("client.id")}
+                                selected={field.value as any[]}
+                                onSelect={attendants => field.onChange(attendants)}
+                            />
+                        </div>
+                    )}
+                />
             </DialogContent>
             <DialogActions>
                 <Button
@@ -469,13 +470,10 @@ export default function EventEditModal({
                     {loading ?
                         <CircularProgress size={24} color="inherit" />
                         :
-                        "Editar"
+                        "Criar"
                     }
                 </Button>
             </DialogActions>
-            <div className="flex flex-col gap-4 fixed bottom-8 right-8">
-                {actionButton}
-            </div>
         </Dialog>
     )
 }

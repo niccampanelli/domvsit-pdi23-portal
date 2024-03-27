@@ -32,6 +32,8 @@ interface IEventAttendant {
     id: number
     eventId: number
     attendantId: number
+    accepted: boolean
+    showedUp: boolean
 }
 
 export interface IListResponseItem {
@@ -66,4 +68,14 @@ export interface IUpdateRequest {
 }
 
 export interface IUpdateResponse {
+}
+
+export interface IAcceptRequest {
+    accepted?: boolean
+    attendantId: number
+}
+
+export interface IShowUpRequest {
+    showedUp?: boolean
+    attendantId: number
 }

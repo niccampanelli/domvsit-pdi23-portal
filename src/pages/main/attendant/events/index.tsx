@@ -25,8 +25,8 @@ export default function AttendantEvents() {
     ]
 
     const [search, setSearch] = useState("")
-    const [ocurrenceMin, setOcurrenceMin] = useState<Date>(moment().subtract(1, "month").toDate())
-    const [ocurrenceMax, setOcurrenceMax] = useState<Date>(moment().add(1, "month").toDate())
+    const [ocurrenceMin, setOcurrenceMin] = useState<Date>(moment().subtract(6, "month").toDate())
+    const [ocurrenceMax, setOcurrenceMax] = useState<Date>(moment().add(6, "month").toDate())
     const [sortField, setSortField] = useState<ListRequestSortFieldsType>("createdAt")
     const [sortOrder, setSortOrder] = useState<"ASC" | "DESC">("DESC")
     const [events, setEvents] = useState<IListResponseItem[]>([])
@@ -219,6 +219,7 @@ export default function AttendantEvents() {
                 open={viewModalOpen}
                 onClose={() => handleViewModalClose()}
                 event={selectedEvent}
+                refreshData={fetchEvents}
             />
         </div>
     )

@@ -1,4 +1,4 @@
-import { IListRequest, INewRequest, INewResponse, IUpdateRequest, IUpdateResponse, ListResponseType } from "../types/services/eventService"
+import { IAcceptRequest, IListRequest, INewRequest, INewResponse, IShowUpRequest, IUpdateRequest, IUpdateResponse, ListResponseType } from "../types/services/eventService"
 import API from "./api"
 
 async function newEvent(request: INewRequest): Promise<INewResponse> {
@@ -29,9 +29,19 @@ async function deleteEvent(id: number): Promise<void> {
     await API.eventApi.delete(`event/delete/${id}`)
 }
 
+async function accept(id: number, request: IAcceptRequest): Promise<void> {
+    await API.eventApi.post(`event/accept/${id}`, request)
+}
+
+async function showUp(id: number, request: IShowUpRequest): Promise<void> {
+    await API.eventApi.post(`event/showUp/${id}`, request)
+}
+
 export default {
     newEvent,
     list,
     update,
-    deleteEvent
+    deleteEvent,
+    accept,
+    showUp
 }

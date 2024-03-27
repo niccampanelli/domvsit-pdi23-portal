@@ -1,29 +1,36 @@
-import { LinkOutlined } from "@mui/icons-material";
-import { Avatar, Chip, Dialog, DialogContent, DialogTitle, Divider, Skeleton, Tooltip, Typography } from "@mui/material";
+import { Check, Close } from "@mui/icons-material";
+import { Avatar, Badge, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Skeleton, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
+import { useAuthContext } from "../../context/Auth";
 import { useToastsContext } from "../../context/Toasts";
 import clientService from "../../services/clientService";
+import eventService from "../../services/eventService";
 import { IEventViewModalProps } from "../../types/components/EventViewModal";
+import { isAttendant } from "../../types/context/User";
 import { IGetAttendantByIdResponse, IGetClientByIdResponse } from "../../types/services/clientService";
 import getColorFromString from "../../util/getColorFromString";
 import { getErrorMessageOrDefault } from "../../util/getErrorMessageOrDefault";
 import getInitials from "../../util/getInitials";
 import EventViewModalAttendantsLoading from "./AttendantsLoading";
+import EventViewModalLinkChip from "./LinkChip";
 
 export default function EventViewModal({
     open,
     onClose,
     event,
-    actionButton
+    actionButton,
+    refreshData
 }: IEventViewModalProps) {
 
     const { addToast } = useToastsContext()
+    const { user } = useAuthContext()
 
     const [client, setClient] = useState<IGetClientByIdResponse | undefined>()
     const [attendants, setAttendants] = useState<IGetAttendantByIdResponse[]>([])
     const [clientLoading, setClientLoading] = useState(false)
     const [attendantsLoading, setAttendantsLoading] = useState(false)
+    const [acceptLoading, setAcceptLoading] = useState(false)
 
     async function fetchClient() {
         setClientLoading(true)
@@ -72,6 +79,61 @@ export default function EventViewModal({
         }
     }
 
+    async function handleAccept() {
+        setAcceptLoading(true)
+
+        try {
+            await eventService.accept(event!.id, {
+                attendantId: user!.id
+            })
+
+            const accepted = didUserAccept()
+
+            addToast({
+                title: accepted ? "Você cancelou sua presença" : "Você confirmou presença!",
+                message: accepted ? "Você não participará mais deste evento" : "Você confirmou presença neste evento",
+                type: "success"
+            })
+
+            onClose()
+            refreshData?.()
+        }
+        catch (error) {
+            const message = getErrorMessageOrDefault(error)
+            addToast({
+                title: "Erro ao aceitar o evento",
+                message,
+                type: "error"
+            })
+        }
+        finally {
+            setAcceptLoading(false)
+        }
+    }
+
+    async function handleShowUp() {
+        try {
+            await eventService.showUp(event!.id, {
+                attendantId: user!.id
+            })
+
+            onClose()
+            refreshData?.()
+        }
+        catch (error) {
+            const message = getErrorMessageOrDefault(error)
+            console.error(message)
+        }
+    }
+
+    function didUserAccept() {
+        return event?.eventAttendants.find(attendant => attendant.attendantId === user?.id)?.accepted
+    }
+
+    function didAttendantAccept(attendantId: number) {
+        return event?.eventAttendants.find(attendant => attendant.attendantId === attendantId)?.accepted
+    }
+
     useEffect(() => {
         if (event) {
             if (event.clientId)
@@ -103,7 +165,7 @@ export default function EventViewModal({
                         color="primary"
                     />
                 </div>
-                <Typography>
+                <Typography className="whitespace-pre-line">
                     {event?.description}
                 </Typography>
                 <div
@@ -121,22 +183,66 @@ export default function EventViewModal({
                             <EventViewModalAttendantsLoading />
                             :
                             attendants.map(attendant => (
-                                <Tooltip
-                                    title={attendant.name}
-                                    arrow
+                                <Badge
+                                    key={attendant.id}
+                                    overlap="circular"
+                                    anchorOrigin={{
+                                        vertical: "bottom",
+                                        horizontal: "right"
+                                    }}
+                                    badgeContent={
+                                        didAttendantAccept(attendant.id) ?
+                                            <Tooltip
+                                                title="Confirmado"
+                                                arrow
+                                            >
+                                                <Avatar
+                                                    alt={attendant.name}
+                                                    sx={{
+                                                        bgcolor: "success.main",
+                                                        width: 20,
+                                                        height: 20
+                                                    }}
+                                                >
+                                                    <Check className="w-4 h-4" />
+                                                </Avatar>
+                                            </Tooltip>
+                                            :
+                                            <Tooltip
+                                                title="Não confirmado"
+                                                arrow
+                                            >
+                                                <Avatar
+                                                    alt={attendant.name}
+                                                    sx={{
+                                                        bgcolor: "error.main",
+                                                        width: 20,
+                                                        height: 20
+                                                    }}
+                                                >
+                                                    <Close className="w-4 h-4" />
+                                                </Avatar>
+                                            </Tooltip>
+                                    }
+
                                 >
-                                    <Avatar
-                                        alt={attendant.name}
-                                        sx={{
-                                            bgcolor: getColorFromString(attendant.name),
-                                            fontSize: 14,
-                                            width: 32,
-                                            height: 32
-                                        }}
+                                    <Tooltip
+                                        title={attendant.name}
+                                        arrow
                                     >
-                                        {getInitials(attendant.name)}
-                                    </Avatar>
-                                </Tooltip>
+                                        <Avatar
+                                            alt={attendant.name}
+                                            sx={{
+                                                bgcolor: getColorFromString(attendant.name),
+                                                fontSize: 14,
+                                                width: 32,
+                                                height: 32
+                                            }}
+                                        >
+                                            {getInitials(attendant.name)}
+                                        </Avatar>
+                                    </Tooltip>
+                                </Badge>
                             ))}
                     </div>
                 </div>
@@ -178,25 +284,19 @@ export default function EventViewModal({
                 </div>
                 <div className="flex flex-col gap-2">
                     <Typography className="font-bold">
-                        Link associado
+                        {event?.link ? "Link associado" : "Nenhum link associado"}
                     </Typography>
                     {event?.link &&
-                        <Tooltip
-                            title="O evento ocorrerá neste link"
-                            arrow
-                        >
-                            <Chip
-                                icon={
-                                    <LinkOutlined />
-                                }
-                                label={event?.link}
-                                clickable
-                                component="a"
-                                href={event?.link}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                            />
-                        </Tooltip>
+                        <EventViewModalLinkChip
+                            link={event.link}
+                            isOcurring={
+                                moment().isBetween(
+                                    moment(event.ocurrence).subtract(1, "hour"),
+                                    moment(event.ocurrence).add(1, "hour")
+                                )
+                            }
+                            clickCallback={() => console.log("Link clicked")}
+                        />
                     }
                 </div>
                 <Divider className="w-full" />
@@ -215,6 +315,25 @@ export default function EventViewModal({
                     {moment(event?.createdAt).format("[Criado em] DD/MM/YYYY [às] HH:mm")} | {moment(event?.updatedAt).format("[Última atualização em] DD/MM/YYYY [às] HH:mm")}
                 </Typography>
             </DialogContent>
+            {isAttendant(user) && event?.eventAttendants.some(attendant => attendant.attendantId === user.id) &&
+                <DialogActions>
+                    <Button
+                        fullWidth
+                        type="submit"
+                        disabled={acceptLoading}
+                        onClick={handleAccept}
+                    >
+                        {acceptLoading ?
+                            <CircularProgress size={24} color="inherit" />
+                            :
+                            didUserAccept() ?
+                                "Cancelar presença"
+                                :
+                                "Confirmar presença"
+                        }
+                    </Button>
+                </DialogActions>
+            }
             <div className="flex flex-col gap-4 fixed bottom-8 right-8">
                 {actionButton}
             </div>

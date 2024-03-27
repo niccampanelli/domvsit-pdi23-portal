@@ -6,4 +6,11 @@ export interface IEventViewModalProps {
     onClose: () => void
     event?: IListResponseItem
     actionButton?: ReactNode
+    refreshData?: () => void
+}
+
+export interface IEventViewModalLinkChipProps {
+    link: string
+    isOcurring?: boolean,
+    clickCallback?: () => void
 }

@@ -1,4 +1,4 @@
-import { AddOutlined, ArrowDownwardOutlined, ArrowUpwardOutlined, CloseOutlined, DeleteOutlined, EditOutlined, FaceOutlined, SearchOutlined } from "@mui/icons-material";
+import { AddOutlined, ArrowDownwardOutlined, ArrowUpwardOutlined, CloseOutlined, DeleteOutlined, EditOutlined, GroupsOutlined, SearchOutlined } from "@mui/icons-material";
 import { Autocomplete, Fab, Grid, IconButton, InputAdornment, MenuItem, Skeleton, TextField, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -214,7 +214,7 @@ export default function AdminEvents() {
                                     fullWidth: true,
                                     startAdornment: (
                                         <InputAdornment position="start">
-                                            <FaceOutlined />
+                                            <GroupsOutlined />
                                         </InputAdornment>
                                     )
                                 }}
@@ -321,6 +321,10 @@ export default function AdminEvents() {
                             <EventCard
                                 event={event}
                                 onClick={() => handleModalOpen("view", event)}
+                                openViewModal={() => handleModalOpen("view", event)}
+                                openEditModal={() => handleModalOpen("edit", event)}
+                                openDeleteModal={() => handleModalOpen("delete", event)}
+                                showMenu
                             />
                         </Grid>
                     ))

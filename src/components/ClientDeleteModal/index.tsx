@@ -1,4 +1,4 @@
-import { FaceOutlined } from "@mui/icons-material";
+import { GroupsOutlined } from "@mui/icons-material";
 import { Button, Card, CardContent, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, InputAdornment, TextField, Typography } from "@mui/material";
 import { useState } from "react";
 import { useToastsContext } from "../../context/Toasts";
@@ -93,7 +93,7 @@ export default function ClientDeleteModal({
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
-                                <FaceOutlined />
+                                <GroupsOutlined />
                             </InputAdornment>
                         )
                     }}

@@ -1,4 +1,4 @@
-import { CalendarMonthOutlined, FaceOutlined, SpaceDashboardOutlined } from "@mui/icons-material"
+import { CalendarMonthOutlined, GroupsOutlined, SpaceDashboardOutlined } from "@mui/icons-material"
 import { NavigationItemsType } from "../types/context/Navigation"
 
 export const navigationRoutes: NavigationItemsType = {
@@ -14,7 +14,7 @@ export const navigationRoutes: NavigationItemsType = {
             path: "/admin/events",
         },
         {
-            icon: <FaceOutlined />,
+            icon: <GroupsOutlined />,
             label: "Clientes",
             path: "/admin/clients",
         }

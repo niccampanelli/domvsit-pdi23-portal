@@ -1,9 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Close, Face3Outlined, FaceOutlined, LinkOutlined, NotesOutlined, TodayOutlined } from "@mui/icons-material";
+import { Close, Face3Outlined, GroupsOutlined, LinkOutlined, NotesOutlined, TodayOutlined } from "@mui/icons-material";
 import { Autocomplete, Avatar, Button, Card, CardHeader, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, FormHelperText, IconButton, InputAdornment, TextField, Tooltip, Typography } from "@mui/material";
+import moment from "moment";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
+import { useToastsContext } from "../../context/Toasts";
 import eventService from "../../services/eventService";
 import { IEventCreateModalFormValues, IEventCreateModalProps } from "../../types/components/EventCreateModal";
 import getColorFromString from "../../util/getColorFromString";
@@ -12,8 +14,6 @@ import getFieldErrorNestedMessages from "../../util/getFieldErrorNestedMessage";
 import getInitials from "../../util/getInitials";
 import AttendantSearchModal from "../AttendantSearchModal";
 import ClientSearchModal from "../ClientSearchModal";
-import { useToastsContext } from "../../context/Toasts";
-import moment from "moment";
 
 const schema: yup.ObjectSchema<IEventCreateModalFormValues> = yup.object().shape({
     title: yup
@@ -356,7 +356,7 @@ export default function EventCreateModal({
                                 color={!!error ? "error" : "primary"}
                                 onClick={() => setClientSearchModalOpen(true)}
                                 startIcon={
-                                    <FaceOutlined />
+                                    <GroupsOutlined />
                                 }
                             >
                                 {field.value.id === 0 ?

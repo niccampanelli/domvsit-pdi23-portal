@@ -1,4 +1,4 @@
-import { Check, Close } from "@mui/icons-material";
+import { Check, Close, EventAvailableOutlined, EventBusyOutlined } from "@mui/icons-material";
 import { Avatar, Badge, Button, Chip, CircularProgress, Dialog, DialogActions, DialogContent, DialogTitle, Divider, Skeleton, Tooltip, Typography } from "@mui/material";
 import moment from "moment";
 import { useEffect, useState } from "react";
@@ -114,6 +114,7 @@ export default function EventViewModal({
     async function handleShowUp() {
         try {
             await eventService.showUp(event!.id, {
+                showedUp: true,
                 attendantId: user!.id
             })
 
@@ -132,6 +133,10 @@ export default function EventViewModal({
 
     function didAttendantAccept(attendantId: number) {
         return event?.eventAttendants.find(attendant => attendant.attendantId === attendantId)?.accepted
+    }
+
+    function didAttendantShowUp(attendantId: number) {
+        return event?.eventAttendants.find(attendant => attendant.attendantId === attendantId)?.showedUp
     }
 
     useEffect(() => {
@@ -191,38 +196,72 @@ export default function EventViewModal({
                                         horizontal: "right"
                                     }}
                                     badgeContent={
-                                        didAttendantAccept(attendant.id) ?
-                                            <Tooltip
-                                                title="Confirmado"
-                                                arrow
-                                            >
-                                                <Avatar
-                                                    alt={attendant.name}
-                                                    sx={{
-                                                        bgcolor: "success.main",
-                                                        width: 20,
-                                                        height: 20
-                                                    }}
+                                        moment().isAfter(moment(event?.ocurrence).subtract(1, "hour")) ?
+                                            didAttendantShowUp(attendant.id) ?
+                                                <Tooltip
+                                                    title="Compareceu"
+                                                    arrow
                                                 >
-                                                    <Check className="w-4 h-4" />
-                                                </Avatar>
-                                            </Tooltip>
+                                                    <Avatar
+                                                        alt={attendant.name}
+                                                        sx={{
+                                                            bgcolor: "success.main",
+                                                            width: 20,
+                                                            height: 20
+                                                        }}
+                                                    >
+                                                        <EventAvailableOutlined className="w-4 h-4" />
+                                                    </Avatar>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    title="Não compareceu"
+                                                    arrow
+                                                >
+                                                    <Avatar
+                                                        alt={attendant.name}
+                                                        sx={{
+                                                            bgcolor: "error.main",
+                                                            width: 20,
+                                                            height: 20
+                                                        }}
+                                                    >
+                                                        <EventBusyOutlined className="w-4 h-4" />
+                                                    </Avatar>
+                                                </Tooltip>
                                             :
-                                            <Tooltip
-                                                title="Não confirmado"
-                                                arrow
-                                            >
-                                                <Avatar
-                                                    alt={attendant.name}
-                                                    sx={{
-                                                        bgcolor: "error.main",
-                                                        width: 20,
-                                                        height: 20
-                                                    }}
+                                            didAttendantAccept(attendant.id) ?
+                                                <Tooltip
+                                                    title="Confirmado"
+                                                    arrow
                                                 >
-                                                    <Close className="w-4 h-4" />
-                                                </Avatar>
-                                            </Tooltip>
+                                                    <Avatar
+                                                        alt={attendant.name}
+                                                        sx={{
+                                                            bgcolor: "success.main",
+                                                            width: 20,
+                                                            height: 20
+                                                        }}
+                                                    >
+                                                        <Check className="w-4 h-4" />
+                                                    </Avatar>
+                                                </Tooltip>
+                                                :
+                                                <Tooltip
+                                                    title="Não confirmado"
+                                                    arrow
+                                                >
+                                                    <Avatar
+                                                        alt={attendant.name}
+                                                        sx={{
+                                                            bgcolor: "error.main",
+                                                            width: 20,
+                                                            height: 20
+                                                        }}
+                                                    >
+                                                        <Close className="w-4 h-4" />
+                                                    </Avatar>
+                                                </Tooltip>
                                     }
 
                                 >
@@ -295,7 +334,7 @@ export default function EventViewModal({
                                     moment(event.ocurrence).add(1, "hour")
                                 )
                             }
-                            clickCallback={() => console.log("Link clicked")}
+                            clickCallback={isAttendant(user) ? handleShowUp : undefined}
                         />
                     }
                 </div>
@@ -315,7 +354,8 @@ export default function EventViewModal({
                     {moment(event?.createdAt).format("[Criado em] DD/MM/YYYY [às] HH:mm")} | {moment(event?.updatedAt).format("[Última atualização em] DD/MM/YYYY [às] HH:mm")}
                 </Typography>
             </DialogContent>
-            {isAttendant(user) && event?.eventAttendants.some(attendant => attendant.attendantId === user.id) &&
+            {isAttendant(user) && moment().isBefore(moment(event?.ocurrence).subtract(1, "hour")) &&
+                event?.eventAttendants.some(attendant => attendant.attendantId === user.id) &&
                 <DialogActions>
                     <Button
                         fullWidth

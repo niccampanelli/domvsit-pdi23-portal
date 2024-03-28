@@ -210,6 +210,8 @@ export default function AttendantEvents() {
                             <EventCard
                                 event={event}
                                 onClick={() => handleViewModalOpen(event)}
+                                openViewModal={() => handleViewModalOpen(event)}
+                                showMenu
                             />
                         </Grid>
                     ))

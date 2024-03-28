@@ -1,4 +1,4 @@
-import { CheckCircleOutline, Close, FaceOutlined } from "@mui/icons-material";
+import { CheckCircleOutline, Close, GroupsOutlined } from "@mui/icons-material";
 import { Avatar, Card, CardActionArea, CardHeader, Dialog, DialogContent, Divider, IconButton, InputAdornment, List, TextField, Tooltip, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useToastsContext } from "../../context/Toasts";
@@ -77,7 +77,7 @@ export default function ClientSearchModal({
                     InputProps={{
                         startAdornment: (
                             <InputAdornment position="start">
-                                <FaceOutlined />
+                                <GroupsOutlined />
                             </InputAdornment>
                         )
                     }}

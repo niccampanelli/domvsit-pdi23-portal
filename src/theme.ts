@@ -5,6 +5,13 @@ const theme = createTheme({
         fontFamily: "Inter, sans-serif"
     },
     components: {
+        MuiAutocomplete: {
+            styleOverrides: {
+                input: {
+                    paddingLeft: "0px !important"
+                }
+            }
+        },
         MuiButton: {
             defaultProps: {
                 color: "primary",

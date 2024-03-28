@@ -41,7 +41,7 @@ export default function Header() {
 
     return (
         <StyledHeader
-            className="flex justify-between items-center p-4"
+            className="flex justify-between items-center px-4 py-2"
         >
             <Typography
                 variant="h1"

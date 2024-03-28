@@ -19,7 +19,7 @@ async function update(request: IUpdateRequest): Promise<IUpdateResponse> {
     const { data } = await API.eventApi.put<IUpdateResponse>(`event/update/${request.id}`, {
         ...request,
         id: undefined,
-        status: true
+        status: request.status === undefined ? true : request.status
     })
 
     return data

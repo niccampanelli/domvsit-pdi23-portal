@@ -1,15 +1,21 @@
-import { DeleteOutlined, EditOutlined, LinkOutlined, MoreVertOutlined, VisibilityOutlined } from "@mui/icons-material"
-import { Card, CardActionArea, CardContent, Chip, IconButton, Tooltip, Typography, styled } from "@mui/material"
+import { CheckBoxOutlined, DeleteOutlined, DoNotDisturbOutlined, EditOutlined, LinkOutlined, MoreVertOutlined, VisibilityOutlined } from "@mui/icons-material"
+import { Card, CardActionArea, CardContent, Chip, CircularProgress, IconButton, Tooltip, Typography, styled } from "@mui/material"
 import moment from "moment"
 import { useState } from "react"
-import { IEventCardMenuOption, IEventCardProps } from "../../types/components/EventCard"
+import { useAuthContext } from "../../context/Auth"
+import { useToastsContext } from "../../context/Toasts"
+import eventService from "../../services/eventService"
+import { IEventCardMenuOption, IEventCardProps, IEventCardStyledProps } from "../../types/components/EventCard"
+import { isUser } from "../../types/context/User"
+import { getErrorMessageOrDefault } from "../../util/getErrorMessageOrDefault"
 import getTruncatedText from "../../util/getTruncatedText"
 import EventCardMenu from "./Menu"
-import { isUser } from "../../types/context/User"
-import { useAuthContext } from "../../context/Auth"
 
-const StyledCard = styled(Card)(({ theme }) => ({
-    borderTop: `8px solid ${theme.palette.primary.main}`
+const StyledCard = styled(Card, {
+    shouldForwardProp: (prop) => prop !== "status"
+})<IEventCardStyledProps>(({ theme, status }) => ({
+    borderTop: `8px solid ${status ? theme.palette.primary.main : theme.palette.grey[400]}`,
+    opacity: status ? 1 : 0.5,
 }))
 
 export default function EventCard({
@@ -18,12 +24,15 @@ export default function EventCard({
     openViewModal,
     openEditModal,
     openDeleteModal,
+    onStatusChange,
     showMenu = false,
 }: IEventCardProps) {
 
     const { user } = useAuthContext()
+    const { addToast } = useToastsContext()
 
     const [menuAnchor, setMenuAnchor] = useState<HTMLElement | null>(null)
+    const [statusLoading, setStatusLoading] = useState(false)
 
     const menuOptions: IEventCardMenuOption[] = [
         {
@@ -41,6 +50,38 @@ export default function EventCard({
         }
     ]
 
+    async function handleStatusChange() {
+        setStatusLoading(true)
+
+        try {
+            await eventService.update({
+                id: event.id,
+                status: !event.status
+            })
+
+            addToast({
+                title: "Status alterado",
+                message: `O status do evento foi alterado com sucesso`,
+                type: "success"
+            })
+
+            onStatusChange?.(!event.status)
+        }
+        catch (error) {
+            const message = getErrorMessageOrDefault(error)
+
+            addToast({
+                title: "Erro ao alterar status",
+                message,
+                type: "error"
+            })
+        }
+        finally {
+            setStatusLoading(false)
+            handleMenuClose()
+        }
+    }
+
     if (isUser(user))
         menuOptions.splice(1, 0,
             {
@@ -52,6 +93,20 @@ export default function EventCard({
                 label: "Excluir",
                 icon: <DeleteOutlined />,
                 onClick: () => openDeleteModal?.()
+            },
+            {
+                label: event.status ?
+                    statusLoading ? "Desmarcando" : "Desmarcar"
+                    :
+                    statusLoading ? "Remarcando" : "Remarcar",
+                icon: statusLoading ?
+                    <CircularProgress size={18} color="inherit" />
+                    :
+                    event.status ?
+                        <DoNotDisturbOutlined />
+                        :
+                        <CheckBoxOutlined />,
+                onClick: handleStatusChange
             }
         )
 
@@ -91,6 +146,7 @@ export default function EventCard({
     return (
         <StyledCard
             variant="outlined"
+            status={event.status}
         >
             <CardActionArea
                 onClick={onClick}
@@ -100,7 +156,7 @@ export default function EventCard({
                     <div className="flex flex-row items-center gap-2 mb-4">
                         <Chip
                             label={getFormattedOcurrence(event.ocurrence)}
-                            color="primary"
+                            color={event.status ? "primary" : "default"}
                             size="small"
                         />
                         {event.link &&

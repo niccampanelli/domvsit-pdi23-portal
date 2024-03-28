@@ -83,6 +83,7 @@ export default function AdminEvents() {
                 search,
                 ocurrenceMin,
                 ocurrenceMax,
+                showUnmarked: true,
                 clientId: selectedClient?.id
             })
 
@@ -157,6 +158,18 @@ export default function AdminEvents() {
                 setDeleteModalOpen(true)
                 break
         }
+    }
+
+    function handleStatusChange(id?: number, status?: boolean) {
+        setEvents(previous => previous.map(event => {
+            if (event.id === id)
+                return {
+                    ...event,
+                    status: status ?? !event.status
+                }
+
+            return event
+        }))
     }
 
     useEffect(() => {
@@ -324,6 +337,7 @@ export default function AdminEvents() {
                                 openViewModal={() => handleModalOpen("view", event)}
                                 openEditModal={() => handleModalOpen("edit", event)}
                                 openDeleteModal={() => handleModalOpen("delete", event)}
+                                onStatusChange={(status) => handleStatusChange(event.id, status)}
                                 showMenu
                             />
                         </Grid>

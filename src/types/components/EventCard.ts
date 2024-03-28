@@ -4,6 +4,7 @@ interface IEventCardEvent {
     description: string
     tags?: string[]
     ocurrence: Date
+    status: boolean
     link?: string
 }
 
@@ -13,7 +14,12 @@ export interface IEventCardProps {
     openViewModal?: () => void
     openEditModal?: () => void
     openDeleteModal?: () => void
+    onStatusChange?: (status: boolean) => void
     showMenu?: boolean
+}
+
+export interface IEventCardStyledProps {
+    status: boolean
 }
 
 export interface IEventCardMenuOption {

@@ -156,7 +156,7 @@ export default function EventViewModal({
             onClose={onClose}
             PaperProps={{
                 sx: theme => ({
-                    borderTop: `8px solid ${theme.palette.primary.main}`
+                    borderTop: `8px solid ${event?.status ? theme.palette.primary.main : theme.palette.grey[400]}`,
                 })
             }}
         >
@@ -164,10 +164,16 @@ export default function EventViewModal({
                 {event?.title}
             </DialogTitle>
             <DialogContent className="flex flex-col items-start gap-4">
-                <div>
+                <div className="flex flex-col items-start gap-2">
+                    {event?.status == false &&
+                        <Chip
+                            label="Evento desmarcado"
+                            color="default"
+                        />
+                    }
                     <Chip
                         label={moment(event?.ocurrence).format("dddd, DD [de] MMMM [de] YYYY [às] HH:mm").replace(/^[a-z]/, (c) => c.toUpperCase())}
-                        color="primary"
+                        color={event?.status ? "primary" : "default"}
                     />
                 </div>
                 <Typography className="whitespace-pre-line">

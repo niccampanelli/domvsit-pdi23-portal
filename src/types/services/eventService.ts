@@ -25,6 +25,7 @@ export interface IListRequest extends IPaginationRequest, ISortingRequest<ListRe
     clientId?: number
     ocurrenceMin?: Date
     ocurrenceMax?: Date
+    showUnmarked?: boolean
     search?: string
 }
 
@@ -42,6 +43,7 @@ export interface IListResponseItem {
     description: string
     tags?: string[]
     link?: string
+    status: boolean
     consultorId: number
     clientId: number
     ocurrence: Date

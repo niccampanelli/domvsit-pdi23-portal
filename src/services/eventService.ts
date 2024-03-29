@@ -1,4 +1,4 @@
-import { IAcceptRequest, IListRequest, INewRequest, INewResponse, IShowUpRequest, IUpdateRequest, IUpdateResponse, ListResponseType } from "../types/services/eventService"
+import { IAcceptRequest, IGetShowedUpPercentagesRequest, IGetShowedUpPercentagesResponse, IListRequest, INewRequest, INewResponse, IShowUpRequest, IUpdateRequest, IUpdateResponse, ListResponseType } from "../types/services/eventService"
 import API from "./api"
 
 async function newEvent(request: INewRequest): Promise<INewResponse> {
@@ -37,11 +37,20 @@ async function showUp(id: number, request: IShowUpRequest): Promise<void> {
     await API.eventApi.post(`event/showUp/${id}`, request)
 }
 
+async function getShowedUpPercentages(request: IGetShowedUpPercentagesRequest = {}): Promise<IGetShowedUpPercentagesResponse> {
+    const { data } = await API.eventApi.get("chart/showedUpPercentages", {
+        params: request
+    })
+
+    return data
+}
+
 export default {
     newEvent,
     list,
     update,
     deleteEvent,
     accept,
-    showUp
+    showUp,
+    getShowedUpPercentages
 }

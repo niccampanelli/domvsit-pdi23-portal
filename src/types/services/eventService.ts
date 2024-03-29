@@ -81,3 +81,11 @@ export interface IShowUpRequest {
     showedUp?: boolean
     attendantId: number
 }
+
+export interface IGetShowedUpPercentagesRequest {
+    months?: number
+}
+
+export interface IGetShowedUpPercentagesResponse {
+    showedUpPercentage: number
+}

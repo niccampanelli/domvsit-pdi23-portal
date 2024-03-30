@@ -69,11 +69,12 @@ export default function AdminDashboardShowedUpChart() {
             <Card
                 variant="outlined"
                 sx={{
-                    minWidth: 240
+                    minWidth: 240,
+                    height: "100%"
                 }}
             >
                 <CardHeader
-                    title={`Comparecimento de todos os participantes em todos os eventos desde o dia ${moment().subtract(1, "month").format("DD/MM/YYYY")}`}
+                    title={`Comparecimento dos participantes em todos os eventos que ocorreram desde ${moment().subtract(months, "months").format("MMMM [de] YYYY")}`}
                     titleTypographyProps={{
                         variant: "h3",
                         className: "text-sm"
@@ -108,6 +109,9 @@ export default function AdminDashboardShowedUpChart() {
                             </MenuItem>
                         </TextField>
                     }
+                    sx={{
+                        gap: 4
+                    }}
                 />
                 <CardContent className="relative">
                     <AnimatePresence>

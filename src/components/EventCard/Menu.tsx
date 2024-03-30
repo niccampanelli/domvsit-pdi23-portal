@@ -21,9 +21,9 @@ export default function EventCardMenu({
                 dense: true
             }}
         >
-            {options.map(option => (
+            {options.map((option, index) => (
                 option.divider ?
-                    <Divider />
+                    <Divider key={`Divider${index}`} />
                     :
                     <MenuItem
                         key={option.label}

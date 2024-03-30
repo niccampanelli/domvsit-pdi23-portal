@@ -89,3 +89,26 @@ export interface IGetShowedUpPercentagesRequest {
 export interface IGetShowedUpPercentagesResponse {
     showedUpPercentage: number
 }
+
+export interface IGetMarkedUnmarkedRequest {
+    months?: number
+}
+
+export interface IGetMarkedUnmarkedResponseItem {
+    month: Date
+    marked: number
+    unmarked: number
+}
+
+export type GetMarkedUnmarkedResponseType = IGetMarkedUnmarkedResponseItem[]
+
+export interface IGetShowedUpByClientRequest {
+    months?: number
+}
+
+export interface IGetShowedUpByClientResponseItem {
+    eventCount: number
+    clientId: number
+}
+
+export type GetShowedUpByClientResponseType = IGetShowedUpByClientResponseItem[]

@@ -85,6 +85,7 @@ export default function ClientSection() {
                     :
                     clients.map(client => (
                         <Grid
+                            key={client.id}
                             item
                             xs={3}
                         >

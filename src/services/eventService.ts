@@ -1,4 +1,4 @@
-import { GetMarkedUnmarkedResponseType, GetShowedUpByClientResponseType, IAcceptRequest, IGetMarkedUnmarkedRequest, IGetShowedUpByClientRequest, IGetShowedUpPercentagesRequest, IGetShowedUpPercentagesResponse, IListRequest, INewRequest, INewResponse, IShowUpRequest, IUpdateRequest, IUpdateResponse, ListResponseType } from "../types/services/eventService"
+import { GetMarkedUnmarkedResponseType, GetShowedUpByAttendantResponseType, GetShowedUpByClientResponseType, IAcceptRequest, IGetMarkedUnmarkedRequest, IGetShowedUpByAttendantRequest, IGetShowedUpByClientRequest, IGetShowedUpPercentagesRequest, IGetShowedUpPercentagesResponse, IListRequest, INewRequest, INewResponse, IShowUpRequest, IUpdateRequest, IUpdateResponse, ListResponseType } from "../types/services/eventService"
 import API from "./api"
 
 async function newEvent(request: INewRequest): Promise<INewResponse> {
@@ -61,6 +61,14 @@ async function getShowedUpByClient(request: IGetShowedUpByClientRequest = {}): P
     return data
 }
 
+async function getShowedUpByAttendant(request: IGetShowedUpByAttendantRequest = {}): Promise<GetShowedUpByAttendantResponseType> {
+    const { data } = await API.eventApi.get("chart/showedUpByAttendant", {
+        params: request
+    })
+
+    return data
+}
+
 export default {
     newEvent,
     list,
@@ -70,5 +78,6 @@ export default {
     showUp,
     getShowedUpPercentages,
     getMarkedUnmarked,
-    getShowedUpByClient
+    getShowedUpByClient,
+    getShowedUpByAttendant
 }

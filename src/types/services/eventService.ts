@@ -112,3 +112,15 @@ export interface IGetShowedUpByClientResponseItem {
 }
 
 export type GetShowedUpByClientResponseType = IGetShowedUpByClientResponseItem[]
+
+export interface IGetShowedUpByAttendantRequest {
+    months?: number
+    clientId?: number
+}
+
+export interface IGetShowedUpByAttendantResponseItem {
+    eventCount: number
+    attendantId: number
+}
+
+export type GetShowedUpByAttendantResponseType = IGetShowedUpByAttendantResponseItem[]

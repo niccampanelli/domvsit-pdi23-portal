@@ -17,7 +17,10 @@ export function getErrorMessageOrDefault(error: any, customDefaultMessage?: stri
                 :
                 defaultMessage
             :
-            defaultMessage
+            error.message ?
+                error.message
+                :
+                defaultMessage
 
     return message
 }

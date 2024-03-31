@@ -44,7 +44,7 @@ export default function AdminDashboardShowedUpByClientChart() {
             var items: IShowedUpByClientItem[] = []
 
             for (const item of data) {
-                var client = await clientService.getClientById(item.clientId);
+                const client = await clientService.getClientById(item.clientId);
 
                 if (!client) {
                     throw new Error("Cliente não encontrado")
@@ -107,6 +107,7 @@ export default function AdminDashboardShowedUpByClientChart() {
                             label="Período"
                             value={months}
                             onChange={(event) => setMonths(parseInt(event.target.value) as 1 | 3 | 6 | 12)}
+                            disabled={loading}
                         >
                             <MenuItem
                                 value={1}

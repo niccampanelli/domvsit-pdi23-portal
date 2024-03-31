@@ -1,4 +1,5 @@
 import AdminDashboardMarkedUnmarkedChart from "./MarkedUnmarkedChart";
+import AdminDashboardShowedUpByAttendantChart from "./ShowedUpByAttendantChart";
 import AdminDashboardShowedUpByClientChart from "./ShowedUpByClientChart";
 import AdminDashboardShowedUpChart from "./ShowedUpChart";
 
@@ -11,6 +12,7 @@ export default function AdminDashboardChartSection() {
                 <AdminDashboardMarkedUnmarkedChart />
             </div>
             <AdminDashboardShowedUpByClientChart />
+            <AdminDashboardShowedUpByAttendantChart />
         </div>
     )
 }

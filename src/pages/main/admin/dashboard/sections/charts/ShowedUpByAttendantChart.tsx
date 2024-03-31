@@ -1,12 +1,16 @@
-import { Autocomplete, Card, CardContent, CardHeader, InputAdornment, MenuItem, Paper, TextField, Typography, useTheme } from "@mui/material"
-import { BarChart } from "@mui/x-charts"
-import { Variants, motion } from "framer-motion"
-import moment from "moment"
-import { useState } from "react"
-import { useToastsContext } from "../../../../../../context/Toasts"
-import { IListClientResponseItem } from "../../../../../../types/services/clientService"
-import getTruncatedText from "../../../../../../util/getTruncatedText"
 import { GroupsOutlined } from "@mui/icons-material"
+import { Autocomplete, Card, CardContent, CardHeader, CircularProgress, InputAdornment, MenuItem, Paper, TextField, Typography, useTheme } from "@mui/material"
+import { BarChart } from "@mui/x-charts"
+import { AnimatePresence, Variants, motion } from "framer-motion"
+import moment from "moment"
+import { useEffect, useState } from "react"
+import { useToastsContext } from "../../../../../../context/Toasts"
+import clientService from "../../../../../../services/clientService"
+import eventService from "../../../../../../services/eventService"
+import { IShowedUpByAttendantItem } from "../../../../../../types/pages/main/admin/dashboard/sections/charts/ShowedUpByAttendantChart"
+import { IListClientResponseItem } from "../../../../../../types/services/clientService"
+import { getErrorMessageOrDefault } from "../../../../../../util/getErrorMessageOrDefault"
+import getTruncatedText from "../../../../../../util/getTruncatedText"
 
 const paperVariants: Variants = {
     hidden: {
@@ -27,59 +31,102 @@ export default function AdminDashboardShowedUpByAttendantChart() {
     const theme = useTheme()
     const { addToast } = useToastsContext()
 
-    // const [showedUpByClient, setShowedUpByClient] = useState<IShowedUpByAttendantItem[]>([])
+    const [showedUpByAttendant, setShowedUpByAttendant] = useState<IShowedUpByAttendantItem[]>([])
     const [searchClient, setSearchClient] = useState("")
     const [clients, setClients] = useState<IListClientResponseItem[]>([])
     const [selectedClient, setSelectedClient] = useState<IListClientResponseItem | null>(null)
     const [clientsLoading, setClientsLoading] = useState(true)
     const [months, setMonths] = useState<1 | 3 | 6 | 12>(1)
-    // const [loading, setLoading] = useState(true)
+    const [loading, setLoading] = useState(true)
 
-    // async function fetchShowedUpByClient() {
-    //     setLoading(true)
+    async function fetchClients() {
+        setClientsLoading(true)
 
-    //     try {
-    //         const data = await eventService.getShowedUpByClient({
-    //             months: months
-    //         })
+        try {
+            const data = await clientService.listClient({
+                search: searchClient,
+                page: 1,
+                limit: 6
+            })
 
-    //         var items: IShowedUpByAttendantItem[] = []
+            setClients(data.data)
+        }
+        catch (error) {
+            const message = getErrorMessageOrDefault(error)
 
-    //         for (const item of data) {
-    //             var client = await clientService.getAttendantById(item.clientId);
+            addToast({
+                title: "Erro ao buscar os clientes",
+                message,
+                type: "error"
+            })
+        }
+        finally {
+            setClientsLoading(false)
+        }
+    }
 
-    //             if (!client) {
-    //                 throw new Error("Participante não encontrado")
-    //             }
+    async function fetchShowedUpByAttendant() {
+        setLoading(true)
 
-    //             items.push({
-    //                 eventCount: item.eventCount,
-    //                 client: {
-    //                     id: client.id,
-    //                     name: client.name
-    //                 }
-    //             })
-    //         }
+        try {
 
-    //         setShowedUpByClient(items)
-    //     }
-    //     catch (error) {
-    //         const message = getErrorMessageOrDefault(error)
+            if (!selectedClient?.id) {
+                throw new Error("Selecione um cliente para buscar os dados")
+            }
 
-    //         addToast({
-    //             title: "Erro ao buscar os dados de eventos não comparecidos por cliente",
-    //             message,
-    //             type: "error"
-    //         })
-    //     }
-    //     finally {
-    //         setLoading(false)
-    //     }
-    // }
+            const data = await eventService.getShowedUpByAttendant({
+                months: months,
+                clientId: selectedClient?.id
+            })
 
-    // useEffect(() => {
-    //     fetchShowedUpByClient()
-    // }, [months])
+            var items: IShowedUpByAttendantItem[] = []
+
+            for (const item of data) {
+                const attendant = await clientService.getAttendantById(item.attendantId);
+
+                if (!attendant) {
+                    throw new Error("Participante não encontrado")
+                }
+
+                items.push({
+                    eventCount: item.eventCount,
+                    attendant: {
+                        id: attendant.id,
+                        name: attendant.name,
+                        role: attendant.role
+                    }
+                })
+            }
+
+            setShowedUpByAttendant(items)
+        }
+        catch (error) {
+            console.log(error)
+            const message = getErrorMessageOrDefault(error)
+
+            addToast({
+                title: "Erro ao buscar os dados de eventos não comparecidos por participante",
+                message,
+                type: "error"
+            })
+        }
+        finally {
+            setLoading(false)
+        }
+    }
+
+    useEffect(() => {
+        fetchClients()
+    }, [searchClient])
+
+    useEffect(() => {
+        if (selectedClient) {
+            fetchShowedUpByAttendant()
+        }
+        else if (loading) {
+            setLoading(false)
+        }
+    }, [months, selectedClient])
 
     return (
         <div className="flex flex-1 flex-col gap-2">
@@ -103,7 +150,7 @@ export default function AdminDashboardShowedUpByAttendantChart() {
                         className: "text-sm"
                     }}
                     action={
-                        <div>
+                        <div className="flex gap-4">
                             <Autocomplete
                                 autoComplete
                                 value={selectedClient}
@@ -148,6 +195,7 @@ export default function AdminDashboardShowedUpByAttendantChart() {
                                 label="Período"
                                 value={months}
                                 onChange={(event) => setMonths(parseInt(event.target.value) as 1 | 3 | 6 | 12)}
+                                disabled={!selectedClient || clientsLoading || loading}
                             >
                                 <MenuItem
                                     value={1}
@@ -177,7 +225,7 @@ export default function AdminDashboardShowedUpByAttendantChart() {
                     }}
                 />
                 <CardContent className="relative">
-                    {/* <AnimatePresence>
+                    <AnimatePresence>
                         {loading &&
                             <MotionPaper
                                 key="loading"
@@ -205,8 +253,8 @@ export default function AdminDashboardShowedUpByAttendantChart() {
                                 <CircularProgress size={32} color="primary" />
                             </MotionPaper>
                         }
-                    </AnimatePresence> */}
-                    {false ?
+                    </AnimatePresence>
+                    {showedUpByAttendant.length === 0 ?
                         <Paper
                             elevation={0}
                             sx={{
@@ -228,20 +276,16 @@ export default function AdminDashboardShowedUpByAttendantChart() {
                         <BarChart
                             series={[
                                 {
-                                    data: [
-                                        12, 10, 8
-                                    ],
+                                    data: showedUpByAttendant.map(item => item.eventCount) || [],
                                     color: theme.palette.primary.main,
                                     valueFormatter: (value) => `${value} ${value === 1 ? "evento não comparecido" : "eventos não comparecidos"}`,
                                 }
                             ]}
                             yAxis={[
                                 {
-                                    data: [
-                                        "Participante 1", "Participante 2", "Participante 3"
-                                    ],
+                                    data: showedUpByAttendant.map(item => item.attendant) || [],
                                     scaleType: "band",
-                                    valueFormatter: (value) => getTruncatedText(value, 12),
+                                    valueFormatter: (value) => `${getTruncatedText(value.name, 32)}\n(${value.role})`,
                                     tickLabelStyle: {
                                         fontWeight: 900
                                     }
@@ -256,7 +300,7 @@ export default function AdminDashboardShowedUpByAttendantChart() {
                             margin={{
                                 top: 0,
                                 bottom: 72,
-                                left: 100,
+                                left: 200,
                                 right: 10
                             }}
                             layout="horizontal"

@@ -26,6 +26,13 @@ async function authenticate(request: IIdentifyRequest): Promise<IIdentifyRespons
     return data
 }
 
+async function restoreAttendantData(): Promise<IIdentifyResponse> {
+    const { data } = await API.clientApi.get<IIdentifyResponse>("attendant/restoreAttendantData")
+    data.token = localStorage.getItem("authentication_token") || ""
+    data.refreshToken = localStorage.getItem("authentication_refresh_token") || ""
+    return data
+}
+
 async function join(request: IJoinRequest): Promise<IJoinResponse> {
     const { data } = await API.clientApi.post<IJoinResponse>("attendant/joinAsAttendant", request)
 
@@ -68,6 +75,7 @@ export default {
     updateClient,
     deleteClient,
     authenticate,
+    restoreAttendantData,
     join,
     listAttendant,
     listClient,

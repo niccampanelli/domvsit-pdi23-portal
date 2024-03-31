@@ -1,8 +1,9 @@
+import { jwtDecode } from "jwt-decode"
 import { createContext, useContext, useEffect, useState } from "react"
 import API from "../services/api"
 import authService from "../services/authService"
 import clientService from "../services/clientService"
-import { IAuthContext, IAuthProviderProps } from "../types/context/Auth"
+import { IAuthContext, IAuthProviderProps, IJwtTokenPayload } from "../types/context/Auth"
 import { IUser } from "../types/context/User"
 import { IAuthenticateRequest } from "../types/services/authService"
 import { IIdentifyRequest } from "../types/services/clientService"
@@ -112,9 +113,29 @@ export default function AuthProvider({
         setUserLoading(true)
 
         try {
-            const response = await authService.restoreUserData()
+            const token = localStorage.getItem("authentication_token")
+            var decodedToken: IJwtTokenPayload
 
-            setUser(response)
+            try {
+                decodedToken = jwtDecode<IJwtTokenPayload>(token || "")
+            }
+            catch {
+                throw new Error("Token inválido")
+            }
+
+            if (decodedToken.UserType === "Attendant") {
+                const response = await clientService.restoreAttendantData()
+
+                setUser(response)
+            }
+            else if (decodedToken.UserType === "User") {
+                const response = await authService.restoreUserData()
+
+                setUser(response)
+            }
+            else {
+                throw new Error("Tipo de usuário inválido")
+            }
         }
         catch (error) {
             const message = getErrorMessageOrDefault(error)

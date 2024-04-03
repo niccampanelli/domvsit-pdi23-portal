@@ -3,6 +3,7 @@ import { BarChart } from "@mui/x-charts"
 import { AnimatePresence, Variants, motion } from "framer-motion"
 import moment from "moment"
 import { useEffect, useState } from "react"
+import { useAuthContext } from "../../../../../../context/Auth"
 import { useToastsContext } from "../../../../../../context/Toasts"
 import clientService from "../../../../../../services/clientService"
 import eventService from "../../../../../../services/eventService"
@@ -27,6 +28,7 @@ const MotionPaper = motion(Paper)
 export default function AdminDashboardShowedUpByClientChart() {
 
     const theme = useTheme()
+    const { user } = useAuthContext()
     const { addToast } = useToastsContext()
 
     const [showedUpByClient, setShowedUpByClient] = useState<IShowedUpByClientItem[]>([])
@@ -38,7 +40,8 @@ export default function AdminDashboardShowedUpByClientChart() {
 
         try {
             const data = await eventService.getShowedUpByClient({
-                months: months
+                months: months,
+                consultorId: user?.id
             })
 
             var items: IShowedUpByClientItem[] = []

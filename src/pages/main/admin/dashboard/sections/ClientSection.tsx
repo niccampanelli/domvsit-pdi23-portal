@@ -6,9 +6,11 @@ import clientService from "../../../../../services/clientService"
 import { IListClientResponseItem } from "../../../../../types/services/clientService"
 import { getErrorMessageOrDefault } from "../../../../../util/getErrorMessageOrDefault"
 import ClientCardLoading from "../../../../../components/ClientCard/loading"
+import { useAuthContext } from "../../../../../context/Auth"
 
 export default function ClientSection() {
 
+    const { user } = useAuthContext()
     const { addToast } = useToastsContext()
 
     const [clients, setClients] = useState<IListClientResponseItem[]>([])
@@ -21,6 +23,7 @@ export default function ClientSection() {
             const data = await clientService.listClient({
                 page: 1,
                 limit: 4,
+                consultorId: user?.id
             })
 
             setClients(data.data)
@@ -83,17 +86,26 @@ export default function ClientSection() {
                         </Grid>
                     </>
                     :
-                    clients.map(client => (
-                        <Grid
-                            key={client.id}
-                            item
-                            xs={3}
-                        >
-                            <ClientCard
-                                client={client}
-                            />
-                        </Grid>
-                    ))
+                    clients.length === 0 ?
+                        <div className="flex flex-1 h-24 justify-center items-center">
+                            <Typography
+                                color="textSecondary"
+                            >
+                                Nenhum cliente encontrado
+                            </Typography>
+                        </div>
+                        :
+                        clients.map(client => (
+                            <Grid
+                                key={client.id}
+                                item
+                                xs={3}
+                            >
+                                <ClientCard
+                                    client={client}
+                                />
+                            </Grid>
+                        ))
                 }
             </Grid>
         </div>

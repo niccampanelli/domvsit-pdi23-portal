@@ -11,9 +11,11 @@ import { IListClientResponseItem, ListClientRequestSortFieldsType } from "../../
 import { getErrorMessageOrDefault } from "../../../../util/getErrorMessageOrDefault";
 import AdminClientsLoading from "./Loading";
 import ClientDeleteModal from "../../../../components/ClientDeleteModal";
+import { useAuthContext } from "../../../../context/Auth";
 
 export default function AdminClients() {
 
+    const { user } = useAuthContext()
     const { addToast } = useToastsContext()
 
     const sortOptions: { value: ListClientRequestSortFieldsType, label: string }[] = [
@@ -45,7 +47,8 @@ export default function AdminClients() {
                 limit: 20,
                 sortField,
                 sortOrder,
-                search
+                search,
+                consultorId: user?.id
             })
 
             setClients(data.data)

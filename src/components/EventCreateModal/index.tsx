@@ -5,6 +5,7 @@ import moment from "moment";
 import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import * as yup from "yup";
+import { useAuthContext } from "../../context/Auth";
 import { useToastsContext } from "../../context/Toasts";
 import eventService from "../../services/eventService";
 import { IEventCreateModalFormValues, IEventCreateModalProps } from "../../types/components/EventCreateModal";
@@ -103,6 +104,7 @@ export default function EventCreateModal({
         resolver: yupResolver(schema)
     })
 
+    const { user } = useAuthContext()
     const { addToast } = useToastsContext()
 
     const [clientSearchModalOpen, setClientSearchModalOpen] = useState(false)
@@ -375,6 +377,7 @@ export default function EventCreateModal({
                                 onClose={() => setClientSearchModalOpen(false)}
                                 selected={field.value.id === 0 ? undefined : field.value as any}
                                 onSelect={client => field.onChange(client ? client : { id: 0, name: "" })}
+                                consultorId={user?.id}
                             />
                         </div>
                     )}

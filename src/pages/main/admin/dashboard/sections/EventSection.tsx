@@ -6,9 +6,11 @@ import { useToastsContext } from "../../../../../context/Toasts"
 import eventService from "../../../../../services/eventService"
 import { IListResponseItem } from "../../../../../types/services/eventService"
 import { getErrorMessageOrDefault } from "../../../../../util/getErrorMessageOrDefault"
+import { useAuthContext } from "../../../../../context/Auth"
 
 export default function EventSection() {
 
+    const { user } = useAuthContext()
     const { addToast } = useToastsContext()
 
     const [events, setEvents] = useState<IListResponseItem[]>([])
@@ -21,6 +23,7 @@ export default function EventSection() {
             const data = await eventService.list({
                 page: 1,
                 limit: 4,
+                consultorId: user?.id
             })
 
             setEvents(data.data)

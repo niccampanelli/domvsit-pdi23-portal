@@ -13,7 +13,8 @@ export default function ClientSearchModal({
     open,
     onClose,
     selected,
-    onSelect
+    onSelect,
+    consultorId
 }: IClientSearchModalProps) {
 
     const { addToast } = useToastsContext()
@@ -28,7 +29,8 @@ export default function ClientSearchModal({
             const data = await clientService.listClient({
                 page: 1,
                 limit: 10,
-                search
+                search,
+                consultorId
             })
 
             setClients(data.data)

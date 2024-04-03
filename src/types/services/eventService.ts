@@ -84,6 +84,7 @@ export interface IShowUpRequest {
 
 export interface IGetShowedUpPercentagesRequest {
     months?: number
+    consultorId?: number
 }
 
 export interface IGetShowedUpPercentagesResponse {
@@ -92,6 +93,7 @@ export interface IGetShowedUpPercentagesResponse {
 
 export interface IGetMarkedUnmarkedRequest {
     months?: number
+    consultorId?: number
 }
 
 export interface IGetMarkedUnmarkedResponseItem {
@@ -104,6 +106,7 @@ export type GetMarkedUnmarkedResponseType = IGetMarkedUnmarkedResponseItem[]
 
 export interface IGetShowedUpByClientRequest {
     months?: number
+    consultorId?: number
 }
 
 export interface IGetShowedUpByClientResponseItem {

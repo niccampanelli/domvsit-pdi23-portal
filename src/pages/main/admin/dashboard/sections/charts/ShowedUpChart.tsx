@@ -3,6 +3,7 @@ import { PieChart } from "@mui/x-charts"
 import { AnimatePresence, Variants, motion } from "framer-motion"
 import moment from "moment"
 import { useEffect, useState } from "react"
+import { useAuthContext } from "../../../../../../context/Auth"
 import { useToastsContext } from "../../../../../../context/Toasts"
 import eventService from "../../../../../../services/eventService"
 import { getErrorMessageOrDefault } from "../../../../../../util/getErrorMessageOrDefault"
@@ -24,6 +25,7 @@ const MotionPaper = motion(Paper)
 export default function AdminDashboardShowedUpChart() {
 
     const theme = useTheme()
+    const { user } = useAuthContext()
     const { addToast } = useToastsContext()
 
     const [showedUpPercentage, setShowedUpPercentage] = useState(0)
@@ -35,7 +37,8 @@ export default function AdminDashboardShowedUpChart() {
 
         try {
             const data = await eventService.getShowedUpPercentages({
-                months: months
+                months: months,
+                consultorId: user?.id
             })
 
             setShowedUpPercentage(data.showedUpPercentage)

@@ -11,6 +11,7 @@ import { IShowedUpByAttendantItem } from "../../../../../../types/pages/main/adm
 import { IListClientResponseItem } from "../../../../../../types/services/clientService"
 import { getErrorMessageOrDefault } from "../../../../../../util/getErrorMessageOrDefault"
 import getTruncatedText from "../../../../../../util/getTruncatedText"
+import { useAuthContext } from "../../../../../../context/Auth"
 
 const paperVariants: Variants = {
     hidden: {
@@ -29,6 +30,7 @@ const MotionPaper = motion(Paper)
 export default function AdminDashboardShowedUpByAttendantChart() {
 
     const theme = useTheme()
+    const { user } = useAuthContext()
     const { addToast } = useToastsContext()
 
     const [showedUpByAttendant, setShowedUpByAttendant] = useState<IShowedUpByAttendantItem[]>([])
@@ -46,7 +48,8 @@ export default function AdminDashboardShowedUpByAttendantChart() {
             const data = await clientService.listClient({
                 search: searchClient,
                 page: 1,
-                limit: 6
+                limit: 6,
+                consultorId: user?.id
             })
 
             setClients(data.data)

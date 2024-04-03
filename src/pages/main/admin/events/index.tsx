@@ -14,9 +14,11 @@ import { IListClientResponseItem } from "../../../../types/services/clientServic
 import { IListResponseItem, ListRequestSortFieldsType } from "../../../../types/services/eventService";
 import { getErrorMessageOrDefault } from "../../../../util/getErrorMessageOrDefault";
 import AdminEventsLoading from "./Loading";
+import { useAuthContext } from "../../../../context/Auth";
 
 export default function AdminEvents() {
 
+    const { user } = useAuthContext()
     const { addToast } = useToastsContext()
 
     const sortOptions: { value: ListRequestSortFieldsType, label: string }[] = [
@@ -52,7 +54,8 @@ export default function AdminEvents() {
             const data = await clientService.listClient({
                 search: searchClient,
                 page: 1,
-                limit: 6
+                limit: 6,
+                consultorId: user?.id
             })
 
             setClients(data.data)
@@ -84,7 +87,8 @@ export default function AdminEvents() {
                 ocurrenceMin,
                 ocurrenceMax,
                 showUnmarked: true,
-                clientId: selectedClient?.id
+                clientId: selectedClient?.id,
+                consultorId: user?.id
             })
 
             setEvents(data.data)

@@ -1,9 +1,62 @@
 import { Button, Typography, styled } from "@mui/material"
 import { Link } from "react-router-dom"
+import { Variants, motion } from "framer-motion"
 
 const StyledDiv = styled("div")(({ theme }) => ({
     backgroundColor: theme.palette.primary.main
 }))
+
+const MotionTypography = motion(Typography)
+
+const logoVariants: Variants = {
+    hidden: {
+        y: "20%",
+        opacity: 0,
+        rotateZ: -45,
+    },
+    visible: {
+        y: "0%",
+        opacity: 1,
+        rotateZ: 0,
+        transition: {
+            type: "spring",
+            damping: 10,
+            stiffness: 100,
+        }
+    }
+}
+
+const titleVariants: Variants = {
+    hidden: {
+        y: "20%",
+        opacity: 0,
+    },
+    visible: {
+        y: "0%",
+        opacity: 1,
+        transition: {
+            delay: 0.2,
+            duration: 0.8,
+            ease: "easeInOut"
+        }
+    }
+}
+
+const optionsVariants: Variants = {
+    hidden: {
+        y: "20%",
+        opacity: 0,
+    },
+    visible: {
+        y: "0%",
+        opacity: 1,
+        transition: {
+            delay: 0.4,
+            duration: 0.8,
+            ease: "easeInOut"
+        }
+    }
+}
 
 export default function Home() {
 
@@ -11,21 +64,40 @@ export default function Home() {
         <StyledDiv
             className="flex flex-col w-screen h-screen items-center justify-center gap-4 p-8"
         >
-            <Typography
+            <motion.img
+                src="/planifylogo.svg"
+                alt="Logo"
+                className="h-32 mb-8"
+                initial="hidden"
+                animate="visible"
+                variants={logoVariants}
+            />
+            <MotionTypography
                 variant="h1"
                 color="primary.contrastText"
                 className="text-5xl font-bold text-center mb-8"
+                initial="hidden"
+                animate="visible"
+                variants={titleVariants}
             >
                 Transforme cada atendimento em uma oportunidade de ouro com Planify
-            </Typography>
-            <Typography
+            </MotionTypography>
+            <MotionTypography
                 variant="h2"
                 color="primary.contrastText"
                 className="text-xl"
+                initial="hidden"
+                animate="visible"
+                variants={optionsVariants}
             >
                 Entrar como
-            </Typography>
-            <div className="flex gap-4">
+            </MotionTypography>
+            <motion.div
+                className="flex gap-4"
+                initial="hidden"
+                animate="visible"
+                variants={optionsVariants}
+            >
                 <Button
                     component={Link}
                     variant="outlined"
@@ -42,7 +114,7 @@ export default function Home() {
                 >
                     Consultor
                 </Button>
-            </div>
+            </motion.div>
         </StyledDiv>
     )
 }

@@ -1,7 +1,25 @@
-import { Typography } from "@mui/material"
 import { AnimatePresence, Variants, motion } from "framer-motion"
-import { useLocation } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 import AnimatedOutlet from "../../components/AnimatedOutlet"
+import { IconButton } from "@mui/material"
+
+const logoVariants: Variants = {
+    hidden: {
+        y: "20%",
+        opacity: 0,
+        rotateZ: -45,
+    },
+    visible: {
+        y: "0%",
+        opacity: 1,
+        rotateZ: 0,
+        transition: {
+            type: "spring",
+            damping: 10,
+            stiffness: 100,
+        }
+    }
+}
 
 const bannerVariants: Variants = {
     hidden: {
@@ -19,17 +37,24 @@ const bannerVariants: Variants = {
 export default function Auth() {
 
     const location = useLocation()
+    const navigate = useNavigate()
 
     return (
         <div className="flex w-full h-screen overflow-hidden">
             <div className="flex flex-col items-center gap-8 w-full md:w-1/2 p-8 overflow-y-auto">
-                <Typography
-                    variant="h1"
-                    color="primary"
-                    className="text-5xl font-bold"
+                <IconButton
+                    size="large"
+                    onClick={() => navigate("/")}
                 >
-                    Planify
-                </Typography>
+                    <motion.img
+                        src="/planifylogo.svg"
+                        alt="Logo"
+                        className="h-20"
+                        initial="hidden"
+                        animate="visible"
+                        variants={logoVariants}
+                    />
+                </IconButton>
                 <AnimatePresence mode="wait" initial>
                     <AnimatedOutlet key={location.key} />
                 </AnimatePresence>

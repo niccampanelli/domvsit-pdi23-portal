@@ -1,4 +1,4 @@
-import { List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, useMediaQuery } from "@mui/material"
+import { IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, styled, useMediaQuery } from "@mui/material"
 import { useNavigate } from "react-router-dom"
 import { useNavigationContext } from "../../context/Navigation"
 
@@ -48,11 +48,15 @@ export default function Navbar() {
         <StyledSection
             className={`flex flex-col h-full p-4 ${isSmall ? "w-fit" : "w-64"}`}
         >
-            <h1
-                className={`${isSmall ? "text-sm" : "text-2xl"} font-bold`}
-            >
-                Planify
-            </h1>
+            <div>
+                <IconButton size="large" className="mb-4" onClick={() => navigate(navigationItems[0]?.path || "")}>
+                    <img
+                        src="/planifylogo.svg"
+                        alt="Logo"
+                        className="h-16"
+                    />
+                </IconButton>
+            </div>
             <nav>
                 <List
                     className="flex flex-col gap-2"
